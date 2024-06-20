@@ -5,14 +5,14 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 ## Thank you!
 
 {{#each thank}}
-  {{#if name_and_count}}
-- **[@{{name}}]({{profile_url}})** for their {{count}} contributions
+  {{#if NameAndCount}}
+- {{#if NameAndCount.profile_url}}**[@{{NameAndCount.name}}]({{NameAndCount.profile_url}})**{{else}}**{{NameAndCount.name}}**{{/if}} for their {{NameAndCount.count}} {{plural NameAndCount.count 'contribution' 'contributions'}}
   {{/if}}
-  {{#if dep_and_names}}
-- Contributors of `{{crate_name}}`: {{#each contributors}} **[@{{name}}]({{profile_url}})**{{#unless @last}}, {{/unless}}{{/each}}
+  {{#if DepAndNames}}
+- Contributors of `{{DepAndNames.crate_name}}`: {{#each DepAndNames.contributors}} {{#if this.[1]}}**[@{{this.[0]}}]({{this.[1]}})**{{else}}**{{this.[0]}}**{{/if}}{{#unless @last}}, {{/unless}}{{/each}}
   {{/if}}
-  {{#if name_and_deps}}
-- **[@{{name}}]({{profile_url}})** for their conributions to: {{#each crates}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}
+  {{#if NameAndDeps}}
+- {{#if NameAndDeps.profile_url}}**[@{{NameAndDeps.name}}]({{NameAndDeps.profile_url}})**{{else}}**{{NameAndDeps.name}}**{{/if}} for their conributions to: {{#each NameAndDeps.crates}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}
   {{/if}}
 {{/each}}
 

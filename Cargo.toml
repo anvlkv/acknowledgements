@@ -1,12 +1,18 @@
 [package]
-name = "acknowledgements"
+name = "acknowledgements-rs"
 version = "0.1.0"
 edition = "2021"
+authors = ["a.nvlkv <acknowledgements_rs@proton.me>"]
+license = "CC-BY-4.0"
+
+[[bin]]
+name = "acknowledge"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.5.7", features = ["derive"] }
 octocrab = "0.38.0"
-tokio = { version = "1.38.0", features = [
+tokio = { version = "=1.35", features = [
     "rt",
     "rt-multi-thread",
     "net",
@@ -23,3 +29,9 @@ unfmt = "0.2.2"
 unfmt_macros = "0.2.2"
 handlebars = "5.1.2"
 serde_json = "1.0.117"
+reqwest = { version = "0.12.5", features = ["json"] }
+dirs = "5.0.1"
+cacache = { version = "13.0.0", default-features = false, features = [
+    "tokio-runtime",
+    "mmap",
+] }
