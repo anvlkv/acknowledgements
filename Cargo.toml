@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["a.nvlkv <acknowledgements_rs@proton.me>"]
 license = "CC-BY-4.0"
 repository = "https://github.com/anvlkv/acknowledgements"
+description = "Generate an .md file full of gratitude"
 
 [[bin]]
 name = "acknowledge"
