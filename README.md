@@ -54,3 +54,10 @@ Links any repos not discoverable via `Cargo.toml`
 - `NameAndCount` - Name of the contributor and count of contributions
 - `DepAndNames` - Name of the dependency, names of contributors
 - `NameAndDeps` - Name of the contributor, names of dependencies where they contributed
+
+
+## Examples
+
+- [`NameAndCount`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS.md)
+- [`DepAndNames`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-DepAndNames.md)
+- [`NameAndDeps` ](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-NameAndDeps.md)
