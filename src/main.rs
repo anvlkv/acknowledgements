@@ -1,17 +1,17 @@
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     path::PathBuf,
-    time::Duration,
 };
 
 use cargo_toml::{Dependency, Manifest};
 use clap::{Parser, Subcommand};
 use handlebars::Handlebars;
+use octocrab::models::RateLimit;
 use serde::{Deserialize, Serialize};
 use tokio::{
     fs,
     sync::mpsc::unbounded_channel,
-    time::{sleep, sleep_until, Instant},
+    time::{sleep, sleep_until, Duration, Instant},
 };
 use unfmt_macros::unformat;
 
@@ -255,6 +255,10 @@ async fn run() -> anyhow::Result<()> {
             .await
             .flatten());
 
+    if gh_token.is_none() {
+        println!("Starting without github access token, may take longer...");
+    }
+
     let out_gh = tokio::spawn({
         let contrib_sx = contrib_sx.clone();
         async move {
@@ -298,9 +302,9 @@ async fn run() -> anyhow::Result<()> {
 
                         let mut contributors = vec![];
                         let repo_handler = github_client.repos(owner, repo);
-                        gh_rate_limited(&github_client).await?;
+                        let mut limit = gh_rate_limited(None, &github_client).await?;
                         let data = repo_handler.get().await?;
-                        gh_rate_limited(&github_client).await?;
+                        limit = gh_rate_limited(Some(limit), &github_client).await?;
                         let first = repo_handler.list_contributors().send().await?;
 
                         for c in first.items.iter() {
@@ -316,7 +320,7 @@ async fn run() -> anyhow::Result<()> {
 
                         if let Some(pages) = first.number_of_pages() {
                             for page in 2..=pages {
-                                gh_rate_limited(&github_client).await?;
+                                limit = gh_rate_limited(Some(limit), &github_client).await?;
                                 let next =
                                     repo_handler.list_contributors().page(page).send().await?;
                                 for c in next.items.iter() {
@@ -453,9 +457,24 @@ async fn run() -> anyhow::Result<()> {
 
             thank.sort_by(|th_1, th_2| match (th_1, th_2) {
                 (
-                    ThankData::NameAndCount { count: count_1, .. },
-                    ThankData::NameAndCount { count: count_2, .. },
-                ) => count_2.cmp(count_1),
+                    ThankData::NameAndCount {
+                        count: count_1,
+                        name: name_1,
+                        ..
+                    },
+                    ThankData::NameAndCount {
+                        count: count_2,
+                        name: name_2,
+                        ..
+                    },
+                ) => {
+                    let o = count_2.cmp(count_1);
+                    match o {
+                        std::cmp::Ordering::Equal => name_1.cmp(name_2),
+                        std::cmp::Ordering::Less => o,
+                        std::cmp::Ordering::Greater => o,
+                    }
+                }
                 _ => unreachable!(),
             });
 
@@ -532,12 +551,23 @@ async fn run() -> anyhow::Result<()> {
             thank.sort_by(|th_1, th_2| match (th_1, th_2) {
                 (
                     ThankData::NameAndDeps {
-                        crates: crates_1, ..
+                        crates: crates_1,
+                        name: name_1,
+                        ..
                     },
                     ThankData::NameAndDeps {
-                        crates: crates_2, ..
+                        crates: crates_2,
+                        name: name_2,
+                        ..
                     },
-                ) => crates_2.len().cmp(&crates_1.len()),
+                ) => {
+                    let o = crates_2.len().cmp(&crates_1.len());
+                    match o {
+                        std::cmp::Ordering::Equal => name_1.cmp(name_2),
+                        std::cmp::Ordering::Less => o,
+                        std::cmp::Ordering::Greater => o,
+                    }
+                }
                 _ => unreachable!(),
             });
             TemplateData {
@@ -563,22 +593,40 @@ async fn run() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn gh_rate_limited(client: &octocrab::Octocrab) -> anyhow::Result<()> {
-    let limit = client.ratelimit().get().await?;
+async fn gh_rate_limited(
+    limit: Option<RateLimit>,
+    client: &octocrab::Octocrab,
+) -> anyhow::Result<RateLimit> {
+    let mut limit = match limit {
+        Some(l) => l,
+        None => client.ratelimit().get().await?,
+    };
 
     if limit.resources.core.remaining > 0 {
-        anyhow::Ok(())
+        limit.resources.core.remaining -= 1;
+        anyhow::Ok(limit)
     } else {
-        let timeout = chrono::DateTime::<chrono::Utc>::from_timestamp_millis(
-            limit.resources.core.reset as i64,
-        )
-        .expect("create timeout");
+        let timeout =
+            chrono::DateTime::<chrono::Utc>::from_timestamp(limit.resources.core.reset as i64, 0)
+                .expect("create timeout");
         let now = chrono::Utc::now();
         let duration = timeout.signed_duration_since(now);
-        let duration = duration.to_std()?;
-        println!("Waiting for rate limit reset {}s...", duration.as_secs());
-        sleep(duration).await;
-        anyhow::Ok(())
+        let seconds = duration.num_seconds() as u64;
+        for _ in 1..=seconds {
+            let now = chrono::Utc::now();
+            let duration = timeout.signed_duration_since(now);
+            print!("\rHonouring your contributors {} requests were made, now please honour github's rate limit, and wait kindly {:0>2}m {:0>2}s...",
+                limit.resources.core.limit,
+                duration.num_minutes(),
+                duration.num_seconds() - duration.num_minutes() * 60,
+            );
+            std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+            sleep(Duration::from_secs(1)).await;
+        }
+        let mut new_limit = client.ratelimit().get().await?;
+        new_limit.resources.core.limit += limit.resources.core.limit;
+        anyhow::Ok(new_limit)
     }
 }
 

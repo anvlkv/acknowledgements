@@ -74,3 +74,4 @@ Links any repos not discoverable via `Cargo.toml`
 - [`NameAndCount`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS.md) - `acknowledge -p .`
 - [`DepAndNames`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-DepAndNames.md) - `acknowledge -p . -f DepAndNames`
 - [`NameAndDeps` ](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-NameAndDeps.md) - `acknowledge -p . -f NameAndDeps`
+- [`BuildAndDev`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-BuildAndDev.md) - `acknowledge -p . -b BuildAndDev`
