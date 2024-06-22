@@ -50,9 +50,9 @@ struct Args {
     #[arg(short, long, default_value_t = Format::NameAndCount)]
     format: Format,
 
-    /// Depth of scan, whether to include minor and optional depes contributors
-    #[arg(short, long, default_value_t = Depth::Major)]
-    depth: Depth,
+    /// Breadth of scan, whether to include optional, build and dev deps contributors
+    #[arg(short, long, default_value_t = Breadth::NonOpt)]
+    breadth: Breadth,
 
     /// Min number of contributions to be included in the list, doesn't apply to sole contributors
     #[arg(short, long, default_value_t = 2)]
@@ -89,13 +89,13 @@ enum Format {
 }
 
 #[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::EnumString)]
-enum Depth {
+enum Breadth {
     /// Non-optional dependencies
-    Major,
+    NonOpt,
     /// All dependencies
-    Direct,
+    All,
     /// All dependencies including [build-dependencies] and [dev-dependencies]
-    Indepth,
+    BuildAndDev,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -172,7 +172,7 @@ async fn run() -> anyhow::Result<()> {
         .cloned()
         .collect();
 
-    let deps = manifest_deps(&args.path, &args.depth)?;
+    let deps = manifest_deps(&args.path, &args.breadth)?;
 
     println!("Analyzing {} dependencies...", deps.len());
 
@@ -655,7 +655,7 @@ async fn clear_cache() -> anyhow::Result<()> {
     anyhow::Ok(())
 }
 
-fn manifest_deps(path: &PathBuf, depth: &Depth) -> anyhow::Result<Vec<(String, Dependency)>> {
+fn manifest_deps(path: &PathBuf, depth: &Breadth) -> anyhow::Result<Vec<(String, Dependency)>> {
     let manifest = Manifest::from_path(path.as_path()).or_else(|_| {
         let mut path = path.clone();
         path.push("Cargo.toml");
@@ -663,18 +663,18 @@ fn manifest_deps(path: &PathBuf, depth: &Depth) -> anyhow::Result<Vec<(String, D
     })?;
 
     let mut deps: Vec<_> = match depth {
-        Depth::Major => manifest
+        Breadth::NonOpt => manifest
             .dependencies
             .iter()
             .filter(|d| !d.1.optional())
             .map(|(k, d)| (k.clone(), d.clone()))
             .collect(),
-        Depth::Direct => manifest
+        Breadth::All => manifest
             .dependencies
             .iter()
             .map(|(k, d)| (k.clone(), d.clone()))
             .collect(),
-        Depth::Indepth => manifest
+        Breadth::BuildAndDev => manifest
             .dependencies
             .iter()
             .chain(manifest.dev_dependencies.iter())
@@ -685,7 +685,7 @@ fn manifest_deps(path: &PathBuf, depth: &Depth) -> anyhow::Result<Vec<(String, D
 
     if let Some(workspace) = manifest.workspace {
         match depth {
-            Depth::Indepth => deps.extend(
+            Breadth::BuildAndDev => deps.extend(
                 workspace
                     .dependencies
                     .iter()

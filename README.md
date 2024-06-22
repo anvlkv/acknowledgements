@@ -2,7 +2,7 @@
 
 `acknowledge` is a CLI tool for generating list of acknowledgements based on your `Cargo.toml` file.
 
-It works with github and gitlab APIs. **Only** public repos are supported.
+It works with github and gitlab APIs. Only public repos are supported.
 
 ## Install
 
@@ -28,10 +28,12 @@ Options:
           Running Acknowledgements on any project of reasonable size you're likely to face rate limits. Please provide a personal access token
   -o, --output <OUTPUT>
           Output file path, defaults to project path if not provided
+  -m, --mention
+          Whether to include @ (at) symbol in front of a github user's name
   -f, --format <FORMAT>
           Format of the output file [default: NameAndCount]
-  -d, --depth <DEPTH>
-          Depth of scan, whether to include minor and optional depes contributors [default: Major]
+  -b, --breadth <BREADTH>
+          Breadth of scan, whether to include optional, build and dev deps contributors [default: NonOpt]
   -c, --contributions-threshold <CONTRIBUTIONS_THRESHOLD>
           Min number of contributions to be included in the list, doesn't apply to sole contributors [default: 2]
   -s, --sources <SOURCES>
@@ -48,17 +50,17 @@ Options:
 
 #### Github access token
 
-Be sure to provide one if you're waiting for limit reset for too long or too often.
+Be sure to provide one if you're waiting for limit reset for too long or too often. No permissions are needed for this token.
 
 #### Sources
 
 Links any repos not discoverable via `Cargo.toml`
 
-#### Depth
+#### Breadth
 
-- `Major` - Non-optional dependencies
-- `Direct` - All dependencies
-- `Indepth` - All dependencies including `[build-dependencies]` and `[dev-dependencies]`
+- `NonOpt` - Non-optional dependencies
+- `All` - All dependencies
+- `BuildAndDev` - All dependencies including `[build-dependencies]` and `[dev-dependencies]`
 
 #### Format
 

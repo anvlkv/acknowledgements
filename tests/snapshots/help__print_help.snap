@@ -21,8 +21,8 @@ Options:
           Whether to include @ (at) symbol in front of a github user's name
   -f, --format <FORMAT>
           Format of the output file [default: NameAndCount]
-  -d, --depth <DEPTH>
-          Depth of scan, whether to include minor and optional depes contributors [default: Major]
+  -b, --breadth <BREADTH>
+          Breadth of scan, whether to include optional, build and dev deps contributors [default: NonOpt]
   -c, --contributions-threshold <CONTRIBUTIONS_THRESHOLD>
           Min number of contributions to be included in the list, doesn't apply to sole contributors [default: 2]
   -s, --sources <SOURCES>
