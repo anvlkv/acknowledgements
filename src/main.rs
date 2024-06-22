@@ -255,7 +255,9 @@ async fn run() -> anyhow::Result<()> {
             .await
             .flatten());
 
-    if gh_token.is_none() {
+    if let Some(token) = gh_token.as_ref() {
+        write_cached("github_access_token", Some(token.clone())).await;
+    } else {
         println!("Starting without github access token, may take longer...");
     }
 
