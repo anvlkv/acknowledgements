@@ -42,6 +42,10 @@ struct Args {
     #[arg(short, long)]
     output: Option<PathBuf>,
 
+    /// Whether to include @ (at) symbol in front of a github user's name
+    #[arg(short, long, default_value_t = false)]
+    mention: bool,
+
     /// Format of the output file
     #[arg(short, long, default_value_t = Format::NameAndCount)]
     format: Format,
@@ -109,6 +113,7 @@ struct GitLabProject {
 struct TemplateData {
     thank: Vec<ThankData>,
     others: usize,
+    mention: bool,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -457,6 +462,7 @@ async fn run() -> anyhow::Result<()> {
             TemplateData {
                 thank,
                 others: others.len(),
+                mention: args.mention,
             }
         }
         Format::DepAndNames => {
@@ -486,6 +492,7 @@ async fn run() -> anyhow::Result<()> {
             TemplateData {
                 thank,
                 others: others.len(),
+                mention: args.mention,
             }
         }
         Format::NameAndDeps => {
@@ -536,6 +543,7 @@ async fn run() -> anyhow::Result<()> {
             TemplateData {
                 thank,
                 others: others.len(),
+                mention: args.mention,
             }
         }
     };
