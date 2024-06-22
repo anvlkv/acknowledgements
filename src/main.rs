@@ -186,7 +186,7 @@ async fn run() -> anyhow::Result<()> {
                         _ = github_sources
                             .insert(git.replace("git@github.com", "https://github.com"));
                     } else {
-                        eprintln!("source not supported: {git}")
+                        _ = other_sources.insert(git)
                     }
                 } else if detail.path.is_none() {
                     fetch_deps_data.insert(name);
