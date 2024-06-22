@@ -1,5 +1,5 @@
 use std::{
-    collections::{BTreeMap, HashMap, HashSet},
+    collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     path::PathBuf,
     time::Duration,
 };
@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use tokio::{
     fs,
     sync::mpsc::unbounded_channel,
-    time::{sleep_until, Instant},
+    time::{sleep, sleep_until, Instant},
 };
 use unfmt_macros::unformat;
 
@@ -23,7 +23,7 @@ const TEMPLATE: &str = include_str!("./template.md");
 const CACHE_NAME: &str = "acknowledgements_cache";
 const FILE_NAME: &str = "ACKNOWLEDGEMENTS.md";
 
-/// Acknowledgements is a simple CLI tool
+/// acknowledge is a simple CLI tool
 /// to analyze dependencies of a Cargo (rust) project
 /// and produce an ACKNOWLEDMENTS.md file
 /// listing (major) contributors of your dependencies
@@ -49,6 +49,10 @@ struct Args {
     /// Depth of scan, whether to include minor and optional depes contributors
     #[arg(short, long, default_value_t = Depth::Major)]
     depth: Depth,
+
+    /// Min number of contributions to be included in the list, doesn't apply to sole contributors
+    #[arg(short, long, default_value_t = 2)]
+    contributions_threshold: usize,
 
     /// List other sources, not specified in Cargo.toml
     #[arg(short, long)]
@@ -116,12 +120,12 @@ enum ThankData {
     },
     DepAndNames {
         crate_name: String,
-        contributors: Vec<(String, String)>,
+        contributors: BTreeSet<(String, String)>,
     },
     NameAndDeps {
         name: String,
         profile_url: String,
-        crates: Vec<String>,
+        crates: BTreeSet<String>,
     },
 }
 
@@ -236,7 +240,7 @@ async fn run() -> anyhow::Result<()> {
         }
     }
 
-    _ = out.await?;
+    _ = out.await??;
 
     let (contrib_sx, mut contrib_rx) = unbounded_channel();
 
@@ -260,10 +264,6 @@ async fn run() -> anyhow::Result<()> {
             } else {
                 octocrab::instance()
             };
-
-            let limit = github_client.ratelimit().get().await?;
-
-            println!("limits: {limit:#?}");
 
             for src in github_sources {
                 if let Some((data, contributors)) = read_cached::<(
@@ -293,7 +293,9 @@ async fn run() -> anyhow::Result<()> {
 
                         let mut contributors = vec![];
                         let repo_handler = github_client.repos(owner, repo);
+                        gh_rate_limited(&github_client).await?;
                         let data = repo_handler.get().await?;
+                        gh_rate_limited(&github_client).await?;
                         let first = repo_handler.list_contributors().send().await?;
 
                         for c in first.items.iter() {
@@ -309,6 +311,7 @@ async fn run() -> anyhow::Result<()> {
 
                         if let Some(pages) = first.number_of_pages() {
                             for page in 2..=pages {
+                                gh_rate_limited(&github_client).await?;
                                 let next =
                                     repo_handler.list_contributors().page(page).send().await?;
                                 for c in next.items.iter() {
@@ -394,8 +397,8 @@ async fn run() -> anyhow::Result<()> {
         }
     }
 
-    _ = out_gh.await?;
-    _ = out_gl.await?;
+    _ = out_gh.await??;
+    _ = out_gl.await??;
 
     println!("Got all data. generating...");
 
@@ -409,13 +412,24 @@ async fn run() -> anyhow::Result<()> {
         handlebars.register_template_string("template", TEMPLATE)?;
     }
 
+    let threshold = args.contributions_threshold;
     let data: TemplateData = match args.format {
         Format::NameAndCount => {
+            let mut others = HashSet::new();
             let mut thank = Vec::from_iter(
                 contributions
                     .into_iter()
                     .fold(HashMap::new(), |mut acc, (_, entries)| {
+                        let sole = entries.len() == 1;
+
                         for (login, profile_url, commits) in entries {
+                            if !sole && (commits as usize) < threshold {
+                                _ = others.insert(login);
+                                continue;
+                            } else {
+                                _ = others.remove(&login);
+                            }
+
                             let entry =
                                 acc.entry(login.clone()).or_insert(ThankData::NameAndCount {
                                     name: login,
@@ -439,36 +453,67 @@ async fn run() -> anyhow::Result<()> {
                 ) => count_2.cmp(count_1),
                 _ => unreachable!(),
             });
-            TemplateData { thank, others: 0 }
+
+            TemplateData {
+                thank,
+                others: others.len(),
+            }
         }
         Format::DepAndNames => {
+            let mut others = HashSet::new();
+
             let thank = contributions
                 .into_iter()
                 .map(|(crate_name, contributors)| ThankData::DepAndNames {
                     crate_name,
-                    contributors: contributors
-                        .into_iter()
-                        .map(|(login, url, _)| (login, url))
-                        .collect(),
+                    contributors: {
+                        let sole = contributors.len() == 1;
+
+                        BTreeSet::from_iter(contributors.into_iter().filter_map(
+                            |(login, url, commits)| {
+                                if !sole && (commits as usize) < threshold {
+                                    _ = others.insert(login);
+                                    None
+                                } else {
+                                    _ = others.remove(&login);
+                                    Some((login, url))
+                                }
+                            },
+                        ))
+                    },
                 })
                 .collect();
-            TemplateData { thank, others: 0 }
+            TemplateData {
+                thank,
+                others: others.len(),
+            }
         }
         Format::NameAndDeps => {
+            let mut others = HashSet::new();
+
             let mut thank = Vec::from_iter(
                 contributions
                     .into_iter()
                     .fold(HashMap::new(), |mut acc, (crate_name, entries)| {
-                        for (login, profile_url, _) in entries {
+                        let sole = entries.len() == 1;
+
+                        for (login, profile_url, commits) in entries {
+                            if !sole && (commits as usize) < threshold {
+                                _ = others.insert(login);
+                                continue;
+                            } else {
+                                _ = others.remove(&login);
+                            }
+
                             let entry =
                                 acc.entry(login.clone()).or_insert(ThankData::NameAndDeps {
                                     name: login,
                                     profile_url,
-                                    crates: Vec::new(),
+                                    crates: BTreeSet::new(),
                                 });
                             match entry {
                                 ThankData::NameAndDeps { crates, .. } => {
-                                    crates.push(crate_name.clone())
+                                    _ = crates.insert(crate_name.clone());
                                 }
                                 _ => unreachable!(),
                             }
@@ -488,9 +533,14 @@ async fn run() -> anyhow::Result<()> {
                 ) => crates_2.len().cmp(&crates_1.len()),
                 _ => unreachable!(),
             });
-            TemplateData { thank, others: 0 }
+            TemplateData {
+                thank,
+                others: others.len(),
+            }
         }
     };
+
+    // println!("data: {}", serde_json::to_string(&data)?);
 
     let generated = handlebars.render("template", &data)?;
 
@@ -503,6 +553,25 @@ async fn run() -> anyhow::Result<()> {
     fs::write(output_file_path, generated).await?;
 
     Ok(())
+}
+
+async fn gh_rate_limited(client: &octocrab::Octocrab) -> anyhow::Result<()> {
+    let limit = client.ratelimit().get().await?;
+
+    if limit.resources.core.remaining > 0 {
+        anyhow::Ok(())
+    } else {
+        let timeout = chrono::DateTime::<chrono::Utc>::from_timestamp_millis(
+            limit.resources.core.reset as i64,
+        )
+        .expect("create timeout");
+        let now = chrono::Utc::now();
+        let duration = timeout.signed_duration_since(now);
+        let duration = duration.to_std()?;
+        println!("Waiting for rate limit reset {}s...", duration.as_secs());
+        sleep(duration).await;
+        anyhow::Ok(())
+    }
 }
 
 fn plural_helper(

@@ -4,11 +4,12 @@ version = 3
 
 [[package]]
 name = "acknowledgements-rs"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "cacache",
  "cargo_toml",
+ "chrono",
  "clap",
  "crates_io_api",
  "dirs",

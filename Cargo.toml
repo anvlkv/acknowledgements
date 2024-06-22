@@ -1,11 +1,11 @@
 [package]
 name = "acknowledgements-rs"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["a.nvlkv <acknowledgements_rs@proton.me>"]
 license = "CC-BY-4.0"
 repository = "https://github.com/anvlkv/acknowledgements"
-description = "Generate an .md file full of gratitude"
+description = "acknowledge is a simple CLI tool to analyze dependencies of a Cargo (rust) project and produce an ACKNOWLEDMENTS.md file listing (major) contributors of your dependencies"
 
 [[bin]]
 name = "acknowledge"
@@ -20,6 +20,7 @@ tokio = { version = "=1.35", features = [
     "net",
     "macros",
     "fs",
+    "time",
 ] }
 strum = "0.26"
 strum_macros = "0.26"
@@ -37,3 +38,4 @@ cacache = { version = "13.0.0", default-features = false, features = [
     "tokio-runtime",
     "mmap",
 ] }
+chrono = { version = "0.4.38", default-features = false, features = ["now"] }
