@@ -24,23 +24,4 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: katyo/publish-crates@c9f6fdb4620c98d491ffaa6e563cb87388bd6ece
       uses: katyo/publish-crates@v2
-      with:
-      #   # Github API token
-        token: CRATES_IO_TOKEN
-      #   # Path to Rust crate or workspace
-      #   path: # optional, default is .
-      #   # Extra arguments for cargo publish
-      #   args: # optional, default is 
-      #   # Cargo registry token
-      #   registry-token: # optional, default is 
-      #   # Skip execution cargo publish
-      #   dry-run: # optional, default is false
-      #   # Check repository consistency
-      #   check-repo: # optional, default is true
-      #   # Extra post publish delay (milliseconds)
-      #   publish-delay: # optional, default is 0
-      #   # Disable cargo publish validation and cyclic dependency checks
-      #   no-verify: # optional, default is false
-      #   # Exit the workflow gracefully if package does not have a new version to publish
-      #   ignore-unpublished-changes: # optional, default is false
           
