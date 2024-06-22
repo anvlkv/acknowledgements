@@ -24,9 +24,9 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: katyo/publish-crates@c9f6fdb4620c98d491ffaa6e563cb87388bd6ece
       uses: katyo/publish-crates@v2
-      # with:
+      with:
       #   # Github API token
-      #   token: # optional, default is ${{ github.token }}
+        token: CRATES_IO_TOKEN
       #   # Path to Rust crate or workspace
       #   path: # optional, default is .
       #   # Extra arguments for cargo publish
