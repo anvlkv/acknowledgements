@@ -1,17 +1,17 @@
 use std::{
     collections::{BTreeMap, BTreeSet, HashMap, HashSet},
     path::PathBuf,
-    time::Duration,
 };
 
 use cargo_toml::{Dependency, Manifest};
 use clap::{Parser, Subcommand};
 use handlebars::Handlebars;
+use octocrab::models::RateLimit;
 use serde::{Deserialize, Serialize};
 use tokio::{
     fs,
     sync::mpsc::unbounded_channel,
-    time::{sleep, sleep_until, Instant},
+    time::{sleep, sleep_until, Duration, Instant},
 };
 use unfmt_macros::unformat;
 
@@ -42,13 +42,17 @@ struct Args {
     #[arg(short, long)]
     output: Option<PathBuf>,
 
+    /// Whether to include @ (at) symbol in front of a github user's name
+    #[arg(short, long, default_value_t = false)]
+    mention: bool,
+
     /// Format of the output file
     #[arg(short, long, default_value_t = Format::NameAndCount)]
     format: Format,
 
-    /// Depth of scan, whether to include minor and optional depes contributors
-    #[arg(short, long, default_value_t = Depth::Major)]
-    depth: Depth,
+    /// Breadth of scan, whether to include optional, build and dev deps contributors
+    #[arg(short, long, default_value_t = Breadth::NonOpt)]
+    breadth: Breadth,
 
     /// Min number of contributions to be included in the list, doesn't apply to sole contributors
     #[arg(short, long, default_value_t = 2)]
@@ -85,13 +89,13 @@ enum Format {
 }
 
 #[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::EnumString)]
-enum Depth {
+enum Breadth {
     /// Non-optional dependencies
-    Major,
+    NonOpt,
     /// All dependencies
-    Direct,
+    All,
     /// All dependencies including [build-dependencies] and [dev-dependencies]
-    Indepth,
+    BuildAndDev,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -109,6 +113,7 @@ struct GitLabProject {
 struct TemplateData {
     thank: Vec<ThankData>,
     others: usize,
+    mention: bool,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -167,7 +172,7 @@ async fn run() -> anyhow::Result<()> {
         .cloned()
         .collect();
 
-    let deps = manifest_deps(&args.path, &args.depth)?;
+    let deps = manifest_deps(&args.path, &args.breadth)?;
 
     println!("Analyzing {} dependencies...", deps.len());
 
@@ -181,7 +186,7 @@ async fn run() -> anyhow::Result<()> {
                         _ = github_sources
                             .insert(git.replace("git@github.com", "https://github.com"));
                     } else {
-                        eprintln!("source not supported: {git}")
+                        _ = other_sources.insert(git)
                     }
                 } else if detail.path.is_none() {
                     fetch_deps_data.insert(name);
@@ -250,6 +255,12 @@ async fn run() -> anyhow::Result<()> {
             .await
             .flatten());
 
+    if let Some(token) = gh_token.as_ref() {
+        write_cached("github_access_token", Some(token.clone())).await;
+    } else {
+        println!("Starting without github access token, may take longer...");
+    }
+
     let out_gh = tokio::spawn({
         let contrib_sx = contrib_sx.clone();
         async move {
@@ -293,9 +304,9 @@ async fn run() -> anyhow::Result<()> {
 
                         let mut contributors = vec![];
                         let repo_handler = github_client.repos(owner, repo);
-                        gh_rate_limited(&github_client).await?;
+                        let mut limit = gh_rate_limited(None, &github_client).await?;
                         let data = repo_handler.get().await?;
-                        gh_rate_limited(&github_client).await?;
+                        limit = gh_rate_limited(Some(limit), &github_client).await?;
                         let first = repo_handler.list_contributors().send().await?;
 
                         for c in first.items.iter() {
@@ -311,7 +322,7 @@ async fn run() -> anyhow::Result<()> {
 
                         if let Some(pages) = first.number_of_pages() {
                             for page in 2..=pages {
-                                gh_rate_limited(&github_client).await?;
+                                limit = gh_rate_limited(Some(limit), &github_client).await?;
                                 let next =
                                     repo_handler.list_contributors().page(page).send().await?;
                                 for c in next.items.iter() {
@@ -448,15 +459,31 @@ async fn run() -> anyhow::Result<()> {
 
             thank.sort_by(|th_1, th_2| match (th_1, th_2) {
                 (
-                    ThankData::NameAndCount { count: count_1, .. },
-                    ThankData::NameAndCount { count: count_2, .. },
-                ) => count_2.cmp(count_1),
+                    ThankData::NameAndCount {
+                        count: count_1,
+                        name: name_1,
+                        ..
+                    },
+                    ThankData::NameAndCount {
+                        count: count_2,
+                        name: name_2,
+                        ..
+                    },
+                ) => {
+                    let o = count_2.cmp(count_1);
+                    match o {
+                        std::cmp::Ordering::Equal => name_1.cmp(name_2),
+                        std::cmp::Ordering::Less => o,
+                        std::cmp::Ordering::Greater => o,
+                    }
+                }
                 _ => unreachable!(),
             });
 
             TemplateData {
                 thank,
                 others: others.len(),
+                mention: args.mention,
             }
         }
         Format::DepAndNames => {
@@ -486,6 +513,7 @@ async fn run() -> anyhow::Result<()> {
             TemplateData {
                 thank,
                 others: others.len(),
+                mention: args.mention,
             }
         }
         Format::NameAndDeps => {
@@ -525,17 +553,29 @@ async fn run() -> anyhow::Result<()> {
             thank.sort_by(|th_1, th_2| match (th_1, th_2) {
                 (
                     ThankData::NameAndDeps {
-                        crates: crates_1, ..
+                        crates: crates_1,
+                        name: name_1,
+                        ..
                     },
                     ThankData::NameAndDeps {
-                        crates: crates_2, ..
+                        crates: crates_2,
+                        name: name_2,
+                        ..
                     },
-                ) => crates_2.len().cmp(&crates_1.len()),
+                ) => {
+                    let o = crates_2.len().cmp(&crates_1.len());
+                    match o {
+                        std::cmp::Ordering::Equal => name_1.cmp(name_2),
+                        std::cmp::Ordering::Less => o,
+                        std::cmp::Ordering::Greater => o,
+                    }
+                }
                 _ => unreachable!(),
             });
             TemplateData {
                 thank,
                 others: others.len(),
+                mention: args.mention,
             }
         }
     };
@@ -555,22 +595,40 @@ async fn run() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn gh_rate_limited(client: &octocrab::Octocrab) -> anyhow::Result<()> {
-    let limit = client.ratelimit().get().await?;
+async fn gh_rate_limited(
+    limit: Option<RateLimit>,
+    client: &octocrab::Octocrab,
+) -> anyhow::Result<RateLimit> {
+    let mut limit = match limit {
+        Some(l) => l,
+        None => client.ratelimit().get().await?,
+    };
 
     if limit.resources.core.remaining > 0 {
-        anyhow::Ok(())
+        limit.resources.core.remaining -= 1;
+        anyhow::Ok(limit)
     } else {
-        let timeout = chrono::DateTime::<chrono::Utc>::from_timestamp_millis(
-            limit.resources.core.reset as i64,
-        )
-        .expect("create timeout");
+        let timeout =
+            chrono::DateTime::<chrono::Utc>::from_timestamp(limit.resources.core.reset as i64, 0)
+                .expect("create timeout");
         let now = chrono::Utc::now();
         let duration = timeout.signed_duration_since(now);
-        let duration = duration.to_std()?;
-        println!("Waiting for rate limit reset {}s...", duration.as_secs());
-        sleep(duration).await;
-        anyhow::Ok(())
+        let seconds = duration.num_seconds() as u64;
+        for _ in 1..=seconds {
+            let now = chrono::Utc::now();
+            let duration = timeout.signed_duration_since(now);
+            print!("\rHonouring your contributors {} requests were made, now please honour github's rate limit, and wait kindly {:0>2}m {:0>2}s...",
+                limit.resources.core.limit,
+                duration.num_minutes(),
+                duration.num_seconds() - duration.num_minutes() * 60,
+            );
+            std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+            sleep(Duration::from_secs(1)).await;
+        }
+        let mut new_limit = client.ratelimit().get().await?;
+        new_limit.resources.core.limit += limit.resources.core.limit;
+        anyhow::Ok(new_limit)
     }
 }
 
@@ -647,7 +705,7 @@ async fn clear_cache() -> anyhow::Result<()> {
     anyhow::Ok(())
 }
 
-fn manifest_deps(path: &PathBuf, depth: &Depth) -> anyhow::Result<Vec<(String, Dependency)>> {
+fn manifest_deps(path: &PathBuf, depth: &Breadth) -> anyhow::Result<Vec<(String, Dependency)>> {
     let manifest = Manifest::from_path(path.as_path()).or_else(|_| {
         let mut path = path.clone();
         path.push("Cargo.toml");
@@ -655,18 +713,18 @@ fn manifest_deps(path: &PathBuf, depth: &Depth) -> anyhow::Result<Vec<(String, D
     })?;
 
     let mut deps: Vec<_> = match depth {
-        Depth::Major => manifest
+        Breadth::NonOpt => manifest
             .dependencies
             .iter()
             .filter(|d| !d.1.optional())
             .map(|(k, d)| (k.clone(), d.clone()))
             .collect(),
-        Depth::Direct => manifest
+        Breadth::All => manifest
             .dependencies
             .iter()
             .map(|(k, d)| (k.clone(), d.clone()))
             .collect(),
-        Depth::Indepth => manifest
+        Breadth::BuildAndDev => manifest
             .dependencies
             .iter()
             .chain(manifest.dev_dependencies.iter())
@@ -677,7 +735,7 @@ fn manifest_deps(path: &PathBuf, depth: &Depth) -> anyhow::Result<Vec<(String, D
 
     if let Some(workspace) = manifest.workspace {
         match depth {
-            Depth::Indepth => deps.extend(
+            Breadth::BuildAndDev => deps.extend(
                 workspace
                     .dependencies
                     .iter()

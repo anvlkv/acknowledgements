@@ -1,18 +1,7 @@
-# Acknowledgements-rs
-
-`acknowledge` is a CLI tool for generating list of acknowledgements based on your `Cargo.toml` file.
-
-It works with github and gitlab APIs. Only public repos are supported.
-
-## Install
-
-```
-cargo install acknowledgements-rs
-```
-
-## Usage
-
-```
+---
+source: tests/help.rs
+expression: printed
+---
 acknowledge is a simple CLI tool to analyze dependencies of a Cargo (rust) project and produce an ACKNOWLEDMENTS.md file listing (major) contributors of your dependencies
 
 Usage: acknowledge [OPTIONS] --path <PATH> [COMMAND]
@@ -44,34 +33,3 @@ Options:
           Print help
   -V, --version
           Print version
-```
-
-### Options
-
-#### Github access token
-
-Be sure to provide one if you're waiting for limit reset for too long or too often. No permissions are needed for this token.
-
-#### Sources
-
-Links any repos not discoverable via `Cargo.toml`
-
-#### Breadth
-
-- `NonOpt` - Non-optional dependencies
-- `All` - All dependencies
-- `BuildAndDev` - All dependencies including `[build-dependencies]` and `[dev-dependencies]`
-
-#### Format
-
-- `NameAndCount` - Name of the contributor and count of contributions
-- `DepAndNames` - Name of the dependency, names of contributors
-- `NameAndDeps` - Name of the contributor, names of dependencies where they contributed
-
-
-## Examples
-
-- [`NameAndCount`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS.md) - `acknowledge -p .`
-- [`DepAndNames`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-DepAndNames.md) - `acknowledge -p . -f DepAndNames`
-- [`NameAndDeps` ](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-NameAndDeps.md) - `acknowledge -p . -f NameAndDeps`
-- [`BuildAndDev`](https://github.com/anvlkv/acknowledgements/blob/main/ACKNOWLEDGEMENTS-BuildAndDev.md) - `acknowledge -p . -b BuildAndDev`

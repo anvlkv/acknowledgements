@@ -9,6 +9,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[sunng87](https://github.com/sunng87)** for their 1771 contributions
 - **[kbknapp](https://github.com/kbknapp)** for their 1746 contributions
 - **[erickt](https://github.com/erickt)** for their 866 contributions
+- **[mitsuhiko](https://github.com/mitsuhiko)** for their 663 contributions
 - **[carllerche](https://github.com/carllerche)** for their 633 contributions
 - **[seanmonstar](https://github.com/seanmonstar)** for their 534 contributions
 - **[pitdicker](https://github.com/pitdicker)** for their 512 contributions
@@ -34,13 +35,13 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[Mingun](https://github.com/Mingun)** for their 80 contributions
 - **[Peternator7](https://github.com/Peternator7)** for their 68 contributions
 - **[LucioFranco](https://github.com/LucioFranco)** for their 54 contributions
-- **[mitsuhiko](https://github.com/mitsuhiko)** for their 48 contributions
 - **[jonhoo](https://github.com/jonhoo)** for their 47 contributions
 - **[nickelc](https://github.com/nickelc)** for their 43 contributions
 - **[soc](https://github.com/soc)** for their 43 contributions
 - **[nibon7](https://github.com/nibon7)** for their 42 contributions
 - **[little-dude](https://github.com/little-dude)** for their 39 contributions
 - **[esheppa](https://github.com/esheppa)** for their 38 contributions
+- **[max-sixty](https://github.com/max-sixty)** for their 37 contributions
 - **[jun-sheaf](https://github.com/jun-sheaf)** for their 35 contributions
 - **[asomers](https://github.com/asomers)** for their 33 contributions
 - **[willmurphyscode](https://github.com/willmurphyscode)** for their 33 contributions
@@ -171,6 +172,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[kevinmatthes](https://github.com/kevinmatthes)** for their 7 contributions
 - **[kitlith](https://github.com/kitlith)** for their 7 contributions
 - **[leshow](https://github.com/leshow)** for their 7 contributions
+- **[marcospb19](https://github.com/marcospb19)** for their 7 contributions
 - **[matthiasbeyer](https://github.com/matthiasbeyer)** for their 7 contributions
 - **[michalsrb](https://github.com/michalsrb)** for their 7 contributions
 - **[mqudsi](https://github.com/mqudsi)** for their 7 contributions
@@ -181,6 +183,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[srijs](https://github.com/srijs)** for their 7 contributions
 - **[sudotac](https://github.com/sudotac)** for their 7 contributions
 - **[tailhook](https://github.com/tailhook)** for their 7 contributions
+- **[tamird](https://github.com/tamird)** for their 7 contributions
 - **[95th](https://github.com/95th)** for their 6 contributions
 - **[MarcoIeni](https://github.com/MarcoIeni)** for their 6 contributions
 - **[Osspial](https://github.com/Osspial)** for their 6 contributions
@@ -239,7 +242,6 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[jpgrayson](https://github.com/jpgrayson)** for their 5 contributions
 - **[kennytm](https://github.com/kennytm)** for their 5 contributions
 - **[laktak](https://github.com/laktak)** for their 5 contributions
-- **[marcospb19](https://github.com/marcospb19)** for their 5 contributions
 - **[mattmadeofpasta](https://github.com/mattmadeofpasta)** for their 5 contributions
 - **[nnethercote](https://github.com/nnethercote)** for their 5 contributions
 - **[robjtede](https://github.com/robjtede)** for their 5 contributions
@@ -298,12 +300,14 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[jebrosen](https://github.com/jebrosen)** for their 4 contributions
 - **[jonasbb](https://github.com/jonasbb)** for their 4 contributions
 - **[khuey](https://github.com/khuey)** for their 4 contributions
+- **[kjeremy](https://github.com/kjeremy)** for their 4 contributions
 - **[kolloch](https://github.com/kolloch)** for their 4 contributions
 - **[kuviman](https://github.com/kuviman)** for their 4 contributions
 - **[lo48576](https://github.com/lo48576)** for their 4 contributions
 - **[lucacasonato](https://github.com/lucacasonato)** for their 4 contributions
 - **[mathstuf](https://github.com/mathstuf)** for their 4 contributions
 - **[matildasmeds](https://github.com/matildasmeds)** for their 4 contributions
+- **[matklad](https://github.com/matklad)** for their 4 contributions
 - **[mbirtwell](https://github.com/mbirtwell)** for their 4 contributions
 - **[mexus](https://github.com/mexus)** for their 4 contributions
 - **[mkroening](https://github.com/mkroening)** for their 4 contributions
@@ -332,7 +336,9 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[0nkery](https://github.com/0nkery)** for their 3 contributions
 - **[BlackDex](https://github.com/BlackDex)** for their 3 contributions
 - **[BramBonne](https://github.com/BramBonne)** for their 3 contributions
+- **[CAD97](https://github.com/CAD97)** for their 3 contributions
 - **[CertainLach](https://github.com/CertainLach)** for their 3 contributions
+- **[CosmicHorrorDev](https://github.com/CosmicHorrorDev)** for their 3 contributions
 - **[CryZe](https://github.com/CryZe)** for their 3 contributions
 - **[Dushistov](https://github.com/Dushistov)** for their 3 contributions
 - **[Eijebong](https://github.com/Eijebong)** for their 3 contributions
@@ -486,6 +492,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[Mathspy](https://github.com/Mathspy)** for their 2 contributions
 - **Matteo Settenvini** for their 2 contributions
 - **[Michael-F-Bryan](https://github.com/Michael-F-Bryan)** for their 2 contributions
+- **[MichaelMcDonnell](https://github.com/MichaelMcDonnell)** for their 2 contributions
 - **[Owen-CH-Leung](https://github.com/Owen-CH-Leung)** for their 2 contributions
 - **[PoorlyDefinedBehaviour](https://github.com/PoorlyDefinedBehaviour)** for their 2 contributions
 - **[Pothulapati](https://github.com/Pothulapati)** for their 2 contributions
@@ -643,7 +650,6 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[mTsBucy1](https://github.com/mTsBucy1)** for their 2 contributions
 - **[mapkts](https://github.com/mapkts)** for their 2 contributions
 - **[matheus-consoli](https://github.com/matheus-consoli)** for their 2 contributions
-- **[matklad](https://github.com/matklad)** for their 2 contributions
 - **[mattgathu](https://github.com/mattgathu)** for their 2 contributions
 - **[matthiaskrgr](https://github.com/matthiaskrgr)** for their 2 contributions
 - **[mbhall88](https://github.com/mbhall88)** for their 2 contributions
@@ -746,4 +752,4 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[zh-jq](https://github.com/zh-jq)** for their 2 contributions
 - **[zonyitoo](https://github.com/zonyitoo)** for their 2 contributions
 
-And 1034 other cool humans for their contributions, who haven't made it to this list yet.
+And 1053 other cool humans for their contributions, who haven't made it to this list yet.

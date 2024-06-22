@@ -1,6 +1,6 @@
 [package]
 name = "acknowledgements-rs"
-version = "0.1.2"
+version = "1.0.0"
 edition = "2021"
 authors = ["a.nvlkv <acknowledgements_rs@proton.me>"]
 license = "CC-BY-4.0"
@@ -39,3 +39,11 @@ cacache = { version = "13.0.0", default-features = false, features = [
     "mmap",
 ] }
 chrono = { version = "0.4.38", default-features = false, features = ["now"] }
+
+[dev-dependencies]
+insta = { version = "1.39.0", features = ["yaml"] }
+
+
+[profile.dev.package]
+insta.opt-level = 3
+similar.opt-level = 3
