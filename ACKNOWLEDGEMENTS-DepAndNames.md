@@ -21,3 +21,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - Contributors of `unfmt`:  **[jun-sheaf](https://github.com/jun-sheaf)**,  **[thecaralice](https://github.com/thecaralice)**
 
 And 1034 other cool humans for their contributions, who haven't made it to this list yet.
+
+---
+
+This file was generated using [`acknowldge` CLI](https://crates.io/crates/acknowledgements-rs). Thank you for acknowledging the contributors!
