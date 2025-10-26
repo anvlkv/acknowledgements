@@ -1,6 +1,6 @@
 [package]
 name = "acknowledgements-rs"
-version = "1.0.1"
+version = "1.0.2"
 edition = "2021"
 authors = ["a.nvlkv <acknowledgements_rs@proton.me>"]
 license = "CC-BY-4.0"
@@ -12,37 +12,36 @@ name = "acknowledge"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4.5.7", features = ["derive"] }
-octocrab = "0.38.0"
-tokio = { version = "=1.35", features = [
-    "rt",
-    "rt-multi-thread",
-    "net",
-    "macros",
-    "fs",
-    "time",
+anyhow = "1.0.100"
+cacache = { version = "13.1.0", default-features = false, features = [
+  "mmap",
+  "tokio-runtime",
 ] }
+cargo_toml = "0.20.5"
+chrono = { version = "0.4.42", default-features = false, features = ["now"] }
+clap = { version = "4.5.50", features = ["derive"] }
+crates_io_api = "0.11.0"
+dirs = "5.0.1"
+handlebars = "5.1.2"
+octocrab = "0.38.0"
+reqwest = { version = "0.12.24", features = ["json"] }
+serde = "1.0.228"
+serde_json = "1.0.145"
 strum = "0.26"
 strum_macros = "0.26"
-anyhow = "1.0.86"
-cargo_toml = "0.20.3"
-serde = "1.0.203"
-crates_io_api = "0.11.0"
+tokio = { version = "=1.48", features = [
+  "fs",
+  "macros",
+  "net",
+  "rt",
+  "rt-multi-thread",
+  "time",
+] }
 unfmt = "0.2.2"
 unfmt_macros = "0.2.2"
-handlebars = "5.1.2"
-serde_json = "1.0.117"
-reqwest = { version = "0.12.5", features = ["json"] }
-dirs = "5.0.1"
-cacache = { version = "13.0.0", default-features = false, features = [
-    "tokio-runtime",
-    "mmap",
-] }
-chrono = { version = "0.4.38", default-features = false, features = ["now"] }
 
 [dev-dependencies]
-insta = { version = "1.39.0", features = ["yaml"] }
-
+insta = { version = "1.43.2", features = ["yaml"] }
 
 [profile.dev.package]
 insta.opt-level = 3

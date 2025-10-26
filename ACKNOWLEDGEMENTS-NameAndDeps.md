@@ -13,21 +13,24 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[shepmaster](https://github.com/shepmaster)** for their conributions to: `clap`, `octocrab`, `serde`, `tokio`
 - **[Byron](https://github.com/Byron)** for their conributions to: `clap`, `serde`, `tokio`
 - **[Diggsey](https://github.com/Diggsey)** for their conributions to: `json`, `reqwest`, `tokio`
-- **[H2CO3](https://github.com/H2CO3)** for their conributions to: `clap`, `json`, `serde`
 - **[Marwes](https://github.com/Marwes)** for their conributions to: `reqwest`, `serde`, `tokio`
+- **[conradludgate](https://github.com/conradludgate)** for their conributions to: `chrono`, `json`, `tokio`
 - **[djc](https://github.com/djc)** for their conributions to: `chrono`, `reqwest`, `tokio`
 - **[homu](https://github.com/homu)** for their conributions to: `clap`, `json`, `serde`
-- **[ignatenkobrain](https://github.com/ignatenkobrain)** for their conributions to: `chrono`, `clap`, `tokio`
+- **[igor-raits](https://github.com/igor-raits)** for their conributions to: `chrono`, `clap`, `tokio`
 - **[jwilm](https://github.com/jwilm)** for their conributions to: `chrono`, `json`, `serde`
 - **[kornelski](https://github.com/kornelski)** for their conributions to: `clap`, `reqwest`, `tokio`
+- **[lucab](https://github.com/lucab)** for their conributions to: `clap`, `reqwest`, `tokio`
+- **[paolobarbolini](https://github.com/paolobarbolini)** for their conributions to: `reqwest`, `strum`, `tokio`
 - **[sfackler](https://github.com/sfackler)** for their conributions to: `reqwest`, `serde`, `tokio`
 - **[taiki-e](https://github.com/taiki-e)** for their conributions to: `reqwest`, `serde`, `tokio`
 - **[vorot93](https://github.com/vorot93)** for their conributions to: `clap`, `serde`, `tokio`
 - **[Eh2406](https://github.com/Eh2406)** for their conributions to: `chrono`, `handlebars-rust`
 - **[Finomnis](https://github.com/Finomnis)** for their conributions to: `chrono`, `tokio`
+- **[GilShoshan94](https://github.com/GilShoshan94)** for their conributions to: `clap`, `tokio`
+- **[GuillaumeGomez](https://github.com/GuillaumeGomez)** for their conributions to: `chrono`, `clap`
 - **[Jake-Shadle](https://github.com/Jake-Shadle)** for their conributions to: `octocrab`, `tokio`
 - **[JohnHeitmann](https://github.com/JohnHeitmann)** for their conributions to: `chrono`, `serde`
-- **[KamilaBorowska](https://github.com/KamilaBorowska)** for their conributions to: `reqwest`, `serde`
 - **[Keruspe](https://github.com/Keruspe)** for their conributions to: `handlebars-rust`, `tokio`
 - **[KodrAus](https://github.com/KodrAus)** for their conributions to: `chrono`, `reqwest`
 - **[Kroisse](https://github.com/Kroisse)** for their conributions to: `chrono`, `json`
@@ -40,7 +43,6 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[alexcrichton](https://github.com/alexcrichton)** for their conributions to: `serde`, `tokio`
 - **[benesch](https://github.com/benesch)** for their conributions to: `chrono`, `tokio`
 - **[blyxxyz](https://github.com/blyxxyz)** for their conributions to: `clap`, `reqwest`
-- **[conradludgate](https://github.com/conradludgate)** for their conributions to: `chrono`, `tokio`
 - **[ctron](https://github.com/ctron)** for their conributions to: `crates-io-api`, `reqwest`
 - **[danieleades](https://github.com/danieleades)** for their conributions to: `clap`, `reqwest`
 - **[davidpdrsn](https://github.com/davidpdrsn)** for their conributions to: `reqwest`, `tokio`
@@ -50,20 +52,24 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[ducaale](https://github.com/ducaale)** for their conributions to: `clap`, `reqwest`
 - **[durka](https://github.com/durka)** for their conributions to: `clap`, `strum`
 - **[imp](https://github.com/imp)** for their conributions to: `json`, `reqwest`
+- **[jlizen](https://github.com/jlizen)** for their conributions to: `reqwest`, `tokio`
 - **[jonasbb](https://github.com/jonasbb)** for their conributions to: `chrono`, `serde`
 - **[jonhoo](https://github.com/jonhoo)** for their conributions to: `serde`, `tokio`
+- **[joshka](https://github.com/joshka)** for their conributions to: `strum`, `tokio`
+- **[joshtriplett](https://github.com/joshtriplett)** for their conributions to: `clap`, `tokio`
+- **[kennykerr](https://github.com/kennykerr)** for their conributions to: `chrono`, `tokio`
 - **[kennytm](https://github.com/kennytm)** for their conributions to: `chrono`, `clap`
 - **[kevinmatthes](https://github.com/kevinmatthes)** for their conributions to: `chrono`, `clap`
 - **[little-dude](https://github.com/little-dude)** for their conributions to: `clap`, `reqwest`
 - **[lnicola](https://github.com/lnicola)** for their conributions to: `json`, `tokio`
-- **[lucab](https://github.com/lucab)** for their conributions to: `clap`, `reqwest`
 - **[matthiasbeyer](https://github.com/matthiasbeyer)** for their conributions to: `clap`, `handlebars-rust`
 - **[messense](https://github.com/messense)** for their conributions to: `clap`, `reqwest`
 - **[mkantor](https://github.com/mkantor)** for their conributions to: `clap`, `handlebars-rust`
 - **[nox](https://github.com/nox)** for their conributions to: `json`, `serde`
 - **[nyurik](https://github.com/nyurik)** for their conributions to: `clap`, `reqwest`
+- **[obi1kenobi](https://github.com/obi1kenobi)** for their conributions to: `reqwest`, `tokio`
 - **[oli-obk](https://github.com/oli-obk)** for their conributions to: `json`, `serde`
-- **[paolobarbolini](https://github.com/paolobarbolini)** for their conributions to: `reqwest`, `tokio`
+- **[osiewicz](https://github.com/osiewicz)** for their conributions to: `json`, `serde`
 - **[quininer](https://github.com/quininer)** for their conributions to: `reqwest`, `tokio`
 - **[repi](https://github.com/repi)** for their conributions to: `anyhow`, `clap`
 - **[rocallahan](https://github.com/rocallahan)** for their conributions to: `octocrab`, `serde`
@@ -72,37 +78,51 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[sharnoff](https://github.com/sharnoff)** for their conributions to: `clap`, `tokio`
 - **[smoelius](https://github.com/smoelius)** for their conributions to: `octocrab`, `strum`
 - **[srijs](https://github.com/srijs)** for their conributions to: `json`, `tokio`
+- **[sugar700](https://github.com/sugar700)** for their conributions to: `reqwest`, `serde`
 - **[tailhook](https://github.com/tailhook)** for their conributions to: `handlebars-rust`, `tokio`
 - **[tbu-](https://github.com/tbu-)** for their conributions to: `clap`, `serde`
+- **[tesuji](https://github.com/tesuji)** for their conributions to: `clap`, `reqwest`
 - **[theduke](https://github.com/theduke)** for their conributions to: `crates-io-api`, `reqwest`
 - **[untitaker](https://github.com/untitaker)** for their conributions to: `clap`, `handlebars-rust`
 - **[06chaynes](https://github.com/06chaynes)** for their conributions to: `cacache-rs`
 - **[0nkery](https://github.com/0nkery)** for their conributions to: `serde`
+- **[0x676e67](https://github.com/0x676e67)** for their conributions to: `reqwest`
+- **[0xAdk](https://github.com/0xAdk)** for their conributions to: `clap`
 - **[0xB10C](https://github.com/0xB10C)** for their conributions to: `octocrab`
+- **[0xPoe](https://github.com/0xPoe)** for their conributions to: `tokio`
 - **[3Hren](https://github.com/3Hren)** for their conributions to: `tokio`
 - **[46bit](https://github.com/46bit)** for their conributions to: `serde`
-- **[5225225](https://github.com/5225225)** for their conributions to: `handlebars-rust`
 - **[707090](https://github.com/707090)** for their conributions to: `reqwest`
+- **[8LWXpg](https://github.com/8LWXpg)** for their conributions to: `clap`
 - **[95th](https://github.com/95th)** for their conributions to: `tokio`
+- **[ADD-SP](https://github.com/ADD-SP)** for their conributions to: `tokio`
 - **[Aaron1011](https://github.com/Aaron1011)** for their conributions to: `clap`
+- **[AaronChen0](https://github.com/AaronChen0)** for their conributions to: `tokio`
+- **[Alpha1337k](https://github.com/Alpha1337k)** for their conributions to: `clap`
 - **[Alvenix](https://github.com/Alvenix)** for their conributions to: `reqwest`
 - **[AlyoshaVasilieva](https://github.com/AlyoshaVasilieva)** for their conributions to: `clap`
 - **Andrew Chin** for their conributions to: `cargo_toml`
+- **[Andrey36652](https://github.com/Andrey36652)** for their conributions to: `reqwest`
 - **[Arian8j2](https://github.com/Arian8j2)** for their conributions to: `strum`
 - **[Arzte](https://github.com/Arzte)** for their conributions to: `json`
+- **[Awpteamoose](https://github.com/Awpteamoose)** for their conributions to: `chrono`
 - **[Baptistemontan](https://github.com/Baptistemontan)** for their conributions to: `serde`
 - **[Binero](https://github.com/Binero)** for their conributions to: `serde`
 - **[BjoernLange](https://github.com/BjoernLange)** for their conributions to: `octocrab`
 - **[BlackDex](https://github.com/BlackDex)** for their conributions to: `reqwest`
 - **[Br1ght0ne](https://github.com/Br1ght0ne)** for their conributions to: `clap`
 - **[BramBonne](https://github.com/BramBonne)** for their conributions to: `anyhow`
+- **[BrandonXLF](https://github.com/BrandonXLF)** for their conributions to: `clap`
 - **[BraulioVM](https://github.com/BraulioVM)** for their conributions to: `tokio`
+- **[Brooooooklyn](https://github.com/Brooooooklyn)** for their conributions to: `tokio`
 - **[BurntSushi](https://github.com/BurntSushi)** for their conributions to: `serde`
 - **[Calder-Ty](https://github.com/Calder-Ty)** for their conributions to: `clap`
 - **[CastilloDel](https://github.com/CastilloDel)** for their conributions to: `clap`
 - **[CertainLach](https://github.com/CertainLach)** for their conributions to: `clap`
 - **[CreepySkeleton](https://github.com/CreepySkeleton)** for their conributions to: `clap`
 - **[CryZe](https://github.com/CryZe)** for their conributions to: `chrono`
+- **[DSharifi](https://github.com/DSharifi)** for their conributions to: `tokio`
+- **[Daksh14](https://github.com/Daksh14)** for their conributions to: `tokio`
 - **[DarkWanderer](https://github.com/DarkWanderer)** for their conributions to: `chrono`
 - **[Darksonn](https://github.com/Darksonn)** for their conributions to: `tokio`
 - **David Tolnay** for their conributions to: `cargo_toml`
@@ -120,30 +140,33 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[Enselic](https://github.com/Enselic)** for their conributions to: `octocrab`
 - **[EverlastingBugstopper](https://github.com/EverlastingBugstopper)** for their conributions to: `tokio`
 - **[FSMaxB](https://github.com/FSMaxB)** for their conributions to: `tokio`
-- **[Fallen4Eyes](https://github.com/Fallen4Eyes)** for their conributions to: `handlebars-rust`
 - **[FauxFaux](https://github.com/FauxFaux)** for their conributions to: `handlebars-rust`
 - **[Flaise](https://github.com/Flaise)** for their conributions to: `serde`
 - **[Freax13](https://github.com/Freax13)** for their conributions to: `json`
+- **[GJason88](https://github.com/GJason88)** for their conributions to: `tokio`
+- **[GREsau](https://github.com/GREsau)** for their conributions to: `json`
 - **[GaiBrutman](https://github.com/GaiBrutman)** for their conributions to: `crates-io-api`
 - **[Gankra](https://github.com/Gankra)** for their conributions to: `serde`
+- **[GeekMasher](https://github.com/GeekMasher)** for their conributions to: `octocrab`
 - **[Gelbpunkt](https://github.com/Gelbpunkt)** for their conributions to: `tokio`
-- **[GilShoshan94](https://github.com/GilShoshan94)** for their conributions to: `tokio`
 - **[Gottox](https://github.com/Gottox)** for their conributions to: `reqwest`
 - **[Gowee](https://github.com/Gowee)** for their conributions to: `tokio`
-- **[GuillaumeGomez](https://github.com/GuillaumeGomez)** for their conributions to: `chrono`
 - **[GyrosOfWar](https://github.com/GyrosOfWar)** for their conributions to: `json`
-- **[HarkonenBade](https://github.com/HarkonenBade)** for their conributions to: `chrono`
 - **[Hodkinson](https://github.com/Hodkinson)** for their conributions to: `tokio`
+- **[Hyask](https://github.com/Hyask)** for their conributions to: `reqwest`
 - **[HyeonuPark](https://github.com/HyeonuPark)** for their conributions to: `tokio`
-- **[Ianleeclark](https://github.com/Ianleeclark)** for their conributions to: `clap`
+- **[IlyaSamokhin97](https://github.com/IlyaSamokhin97)** for their conributions to: `chrono`
 - **[Jasonoro](https://github.com/Jasonoro)** for their conributions to: `reqwest`
 - **Jiahao XU** for their conributions to: `cargo_toml`
+- **[JimChenWYU](https://github.com/JimChenWYU)** for their conributions to: `strum`
 - **[John-Nagle](https://github.com/John-Nagle)** for their conributions to: `chrono`
 - **[JohnDoneth](https://github.com/JohnDoneth)** for their conributions to: `tokio`
 - **[JohnTitor](https://github.com/JohnTitor)** for their conributions to: `clap`
+- **[JonathanBrouwer](https://github.com/JonathanBrouwer)** for their conributions to: `json`
 - **[Kerollmops](https://github.com/Kerollmops)** for their conributions to: `clap`
 - **[Kestrer](https://github.com/Kestrer)** for their conributions to: `tokio`
 - **[Kijewski](https://github.com/Kijewski)** for their conributions to: `chrono`
+- **[Kinrany](https://github.com/Kinrany)** for their conributions to: `chrono`
 - **[Kobzol](https://github.com/Kobzol)** for their conributions to: `tokio`
 - **Kornel** for their conributions to: `cargo_toml`
 - **[Krout0n](https://github.com/Krout0n)** for their conributions to: `json`
@@ -158,8 +181,8 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[Lymia](https://github.com/Lymia)** for their conributions to: `serde`
 - **[MOZGIII](https://github.com/MOZGIII)** for their conributions to: `tokio`
 - **[Manishearth](https://github.com/Manishearth)** for their conributions to: `serde`
-- **[MarcoIeni](https://github.com/MarcoIeni)** for their conributions to: `octocrab`
 - **[Martichou](https://github.com/Martichou)** for their conributions to: `reqwest`
+- **[MathiasKoch](https://github.com/MathiasKoch)** for their conributions to: `serde`
 - **[Mathspy](https://github.com/Mathspy)** for their conributions to: `tokio`
 - **Matteo Settenvini** for their conributions to: `cargo_toml`
 - **[MendyBerger](https://github.com/MendyBerger)** for their conributions to: `strum`
@@ -171,6 +194,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[NeoLegends](https://github.com/NeoLegends)** for their conributions to: `tokio`
 - **[NickHackman](https://github.com/NickHackman)** for their conributions to: `clap`
 - **[Noah-Kennedy](https://github.com/Noah-Kennedy)** for their conributions to: `tokio`
+- **[Nuhvi](https://github.com/Nuhvi)** for their conributions to: `reqwest`
 - **[Nukesor](https://github.com/Nukesor)** for their conributions to: `clap`
 - **[Osspial](https://github.com/Osspial)** for their conributions to: `serde`
 - **[Owen-CH-Leung](https://github.com/Owen-CH-Leung)** for their conributions to: `tokio`
@@ -183,11 +207,12 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[RadicalZephyr](https://github.com/RadicalZephyr)** for their conributions to: `tokio`
 - **[RalfJung](https://github.com/RalfJung)** for their conributions to: `anyhow`
 - **[Ralith](https://github.com/Ralith)** for their conributions to: `tokio`
+- **[Reverier-Xu](https://github.com/Reverier-Xu)** for their conributions to: `clap`
 - **[Roger-luo](https://github.com/Roger-luo)** for their conributions to: `octocrab`
 - **[Roguelazer](https://github.com/Roguelazer)** for their conributions to: `serde`
+- **[Ruben2424](https://github.com/Ruben2424)** for their conributions to: `reqwest`
 - **[Rufflewind](https://github.com/Rufflewind)** for their conributions to: `json`
 - **[SUPERCILEX](https://github.com/SUPERCILEX)** for their conributions to: `clap`
-- **[SamokhinIlya](https://github.com/SamokhinIlya)** for their conributions to: `chrono`
 - **[SebRollen](https://github.com/SebRollen)** for their conributions to: `octocrab`
 - **[SergioBenitez](https://github.com/SergioBenitez)** for their conributions to: `clap`
 - **[Serock3](https://github.com/Serock3)** for their conributions to: `clap`
@@ -208,21 +233,29 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[Veeupup](https://github.com/Veeupup)** for their conributions to: `octocrab`
 - **[Veykril](https://github.com/Veykril)** for their conributions to: `tokio`
 - **[Vinatorul](https://github.com/Vinatorul)** for their conributions to: `clap`
+- **[VoidStarKat](https://github.com/VoidStarKat)** for their conributions to: `clap`
 - **[WiSaGaN](https://github.com/WiSaGaN)** for their conributions to: `serde`
 - **[Will-Shanks](https://github.com/Will-Shanks)** for their conributions to: `clap`
 - **[WindSoilder](https://github.com/WindSoilder)** for their conributions to: `reqwest`
 - **[XAMPPRocky](https://github.com/XAMPPRocky)** for their conributions to: `octocrab`
 - **[Xaeroxe](https://github.com/Xaeroxe)** for their conributions to: `serde`
 - **[Xanewok](https://github.com/Xanewok)** for their conributions to: `json`
+- **[Xuanwo](https://github.com/Xuanwo)** for their conributions to: `reqwest`
 - **[Zomtir](https://github.com/Zomtir)** for their conributions to: `chrono`
+- **[a-kenji](https://github.com/a-kenji)** for their conributions to: `clap`
+- **[a1phyr](https://github.com/a1phyr)** for their conributions to: `tokio`
+- **[aatifsyed](https://github.com/aatifsyed)** for their conributions to: `tokio`
+- **[abonander](https://github.com/abonander)** for their conributions to: `tokio`
 - **[abreis](https://github.com/abreis)** for their conributions to: `chrono`
 - **[adamchalmers](https://github.com/adamchalmers)** for their conributions to: `tokio`
 - **[adamcrume](https://github.com/adamcrume)** for their conributions to: `serde`
+- **[adrienpessu](https://github.com/adrienpessu)** for their conributions to: `octocrab`
 - **[afinch7](https://github.com/afinch7)** for their conributions to: `tokio`
-- **[agayev](https://github.com/agayev)** for their conributions to: `tokio`
 - **[ahl](https://github.com/ahl)** for their conributions to: `serde`
 - **[ajeetdsouza](https://github.com/ajeetdsouza)** for their conributions to: `clap`
 - **[aknuds1](https://github.com/aknuds1)** for their conributions to: `tokio`
+- **[akonradi-signal](https://github.com/akonradi-signal)** for their conributions to: `tokio`
+- **[akorchyn](https://github.com/akorchyn)** for their conributions to: `octocrab`
 - **[akshayknarayan](https://github.com/akshayknarayan)** for their conributions to: `tokio`
 - **[alatiera](https://github.com/alatiera)** for their conributions to: `chrono`
 - **[alce](https://github.com/alce)** for their conributions to: `tokio`
@@ -233,9 +266,11 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[andrewdavidmackenzie](https://github.com/andrewdavidmackenzie)** for their conributions to: `tokio`
 - **[andrewmiller1](https://github.com/andrewmiller1)** for their conributions to: `clap`
 - **[andrisak](https://github.com/andrisak)** for their conributions to: `json`
+- **[anhcuky](https://github.com/anhcuky)** for their conributions to: `reqwest`
 - **[antrik](https://github.com/antrik)** for their conributions to: `serde`
 - **[aoikurokawa](https://github.com/aoikurokawa)** for their conributions to: `tokio`
 - **[arcnmx](https://github.com/arcnmx)** for their conributions to: `json`
+- **[arielb1](https://github.com/arielb1)** for their conributions to: `tokio`
 - **[arthmis](https://github.com/arthmis)** for their conributions to: `clap`
 - **[arthurprs](https://github.com/arthurprs)** for their conributions to: `tokio`
 - **[asayers](https://github.com/asayers)** for their conributions to: `chrono`
@@ -261,38 +296,46 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[bebecue](https://github.com/bebecue)** for their conributions to: `serde`
 - **[benj-fry-sf](https://github.com/benj-fry-sf)** for their conributions to: `clap`
 - **[bennofs](https://github.com/bennofs)** for their conributions to: `json`
+- **[benpueschel](https://github.com/benpueschel)** for their conributions to: `octocrab`
 - **[bensadiku](https://github.com/bensadiku)** for their conributions to: `reqwest`
 - **[bestouff](https://github.com/bestouff)** for their conributions to: `clap`
 - **[beyarkay](https://github.com/beyarkay)** for their conributions to: `octocrab`
 - **[bgilbert](https://github.com/bgilbert)** for their conributions to: `clap`
+- **[bheylin](https://github.com/bheylin)** for their conributions to: `json`
 - **[bikeshedder](https://github.com/bikeshedder)** for their conributions to: `tokio`
 - **[biluohc](https://github.com/biluohc)** for their conributions to: `tokio`
 - **[birkenfeld](https://github.com/birkenfeld)** for their conributions to: `clap`
+- **[biryukovmaxim](https://github.com/biryukovmaxim)** for their conributions to: `strum`
+- **[bitcapybara](https://github.com/bitcapybara)** for their conributions to: `tokio`
 - **[bkaestner](https://github.com/bkaestner)** for their conributions to: `clap`
 - **[bkchr](https://github.com/bkchr)** for their conributions to: `tokio`
 - **[blaenk](https://github.com/blaenk)** for their conributions to: `handlebars-rust`
 - **[blasrodri](https://github.com/blasrodri)** for their conributions to: `tokio`
 - **[bluejekyll](https://github.com/bluejekyll)** for their conributions to: `tokio`
+- **[bobozaur](https://github.com/bobozaur)** for their conributions to: `strum`
 - **[borman](https://github.com/borman)** for their conributions to: `serde`
 - **[botahamec](https://github.com/botahamec)** for their conributions to: `chrono`
 - **[bouk](https://github.com/bouk)** for their conributions to: `json`
 - **[bouzuya](https://github.com/bouzuya)** for their conributions to: `reqwest`
-- **[brodybits](https://github.com/brodybits)** for their conributions to: `tokio`
+- **[bragov4ik](https://github.com/bragov4ik)** for their conributions to: `chrono`
 - **[budziq](https://github.com/budziq)** for their conributions to: `reqwest`
+- **[byte-sourcerer](https://github.com/byte-sourcerer)** for their conributions to: `tokio`
 - **[c-git](https://github.com/c-git)** for their conributions to: `chrono`
 - **[c410-f3r](https://github.com/c410-f3r)** for their conributions to: `serde`
+- **[cakebaker](https://github.com/cakebaker)** for their conributions to: `clap`
 - **[carllerche](https://github.com/carllerche)** for their conributions to: `tokio`
 - **[casey](https://github.com/casey)** for their conributions to: `clap`
 - **[casimir](https://github.com/casimir)** for their conributions to: `tokio`
 - **[cconstantine](https://github.com/cconstantine)** for their conributions to: `tokio`
 - **[cecton](https://github.com/cecton)** for their conributions to: `clap`
 - **[ceejbot](https://github.com/ceejbot)** for their conributions to: `cacache-rs`
+- **[cenviity](https://github.com/cenviity)** for their conributions to: `clap`
 - **[cgwalters](https://github.com/cgwalters)** for their conributions to: `tokio`
+- **[chanbengz](https://github.com/chanbengz)** for their conributions to: `reqwest`
 - **[chanced](https://github.com/chanced)** for their conributions to: `json`
 - **[chaserhkj](https://github.com/chaserhkj)** for their conributions to: `handlebars-rust`
 - **[cherryblossom000](https://github.com/cherryblossom000)** for their conributions to: `clap`
 - **[chinedufn](https://github.com/chinedufn)** for their conributions to: `octocrab`
-- **[cjwcommuny](https://github.com/cjwcommuny)** for their conributions to: `tokio`
 - **[clintfred](https://github.com/clintfred)** for their conributions to: `tokio`
 - **[clubby789](https://github.com/clubby789)** for their conributions to: `clap`
 - **[cmrschwarz](https://github.com/cmrschwarz)** for their conributions to: `handlebars-rust`
@@ -301,12 +344,14 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[complexspaces](https://github.com/complexspaces)** for their conributions to: `reqwest`
 - **[corneliusroemer](https://github.com/corneliusroemer)** for their conributions to: `clap`
 - **[cramertj](https://github.com/cramertj)** for their conributions to: `tokio`
+- **[cratelyn](https://github.com/cratelyn)** for their conributions to: `tokio`
 - **[crazymerlyn](https://github.com/crazymerlyn)** for their conributions to: `clap`
 - **[creativcoder](https://github.com/creativcoder)** for their conributions to: `clap`
 - **[cssivision](https://github.com/cssivision)** for their conributions to: `tokio`
 - **[cstyles](https://github.com/cstyles)** for their conributions to: `clap`
 - **[cuviper](https://github.com/cuviper)** for their conributions to: `json`
 - **[cxw620](https://github.com/cxw620)** for their conributions to: `reqwest`
+- **[czy-29](https://github.com/czy-29)** for their conributions to: `tokio`
 - **[d-e-s-o](https://github.com/d-e-s-o)** for their conributions to: `tokio`
 - **[daboross](https://github.com/daboross)** for their conributions to: `serde`
 - **[daixiang0](https://github.com/daixiang0)** for their conributions to: `tokio`
@@ -317,13 +362,10 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[davidMcneil](https://github.com/davidMcneil)** for their conributions to: `clap`
 - **[davidbarsky](https://github.com/davidbarsky)** for their conributions to: `tokio`
 - **[davvid](https://github.com/davvid)** for their conributions to: `clap`
-- **[daym](https://github.com/daym)** for their conributions to: `strum`
 - **[dbcfd](https://github.com/dbcfd)** for their conributions to: `tokio`
 - **[dbrgn](https://github.com/dbrgn)** for their conributions to: `tokio`
 - **[dcuenot](https://github.com/dcuenot)** for their conributions to: `reqwest`
 - **[de-vri-es](https://github.com/de-vri-es)** for their conributions to: `tokio`
-- **[deankarn](https://github.com/deankarn)** for their conributions to: `json`
-- **[derekdreery](https://github.com/derekdreery)** for their conributions to: `serde`
 - **[derekmahar](https://github.com/derekmahar)** for their conributions to: `clap`
 - **[derhaskell](https://github.com/derhaskell)** for their conributions to: `serde`
 - **[dflemstr](https://github.com/dflemstr)** for their conributions to: `json`
@@ -334,11 +376,15 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[dovahcrow](https://github.com/dovahcrow)** for their conributions to: `chrono`
 - **[dpc](https://github.com/dpc)** for their conributions to: `tokio`
 - **[dreid](https://github.com/dreid)** for their conributions to: `serde`
+- **[drinkcat](https://github.com/drinkcat)** for their conributions to: `chrono`
+- **[druide](https://github.com/druide)** for their conributions to: `json`
 - **[duarten](https://github.com/duarten)** for their conributions to: `tokio`
 - **[duskmoon314](https://github.com/duskmoon314)** for their conributions to: `tokio`
 - **[dwijnand](https://github.com/dwijnand)** for their conributions to: `dirs-rs`
 - **[dylni](https://github.com/dylni)** for their conributions to: `clap`
 - **[e00E](https://github.com/e00E)** for their conributions to: `reqwest`
+- **[eatradish](https://github.com/eatradish)** for their conributions to: `clap`
+- **[eb-64-64](https://github.com/eb-64-64)** for their conributions to: `tokio`
 - **[ecnelises](https://github.com/ecnelises)** for their conributions to: `chrono`
 - **[eddique](https://github.com/eddique)** for their conributions to: `clap`
 - **[ekzhang](https://github.com/ekzhang)** for their conributions to: `tokio`
@@ -352,6 +398,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[esheppa](https://github.com/esheppa)** for their conributions to: `chrono`
 - **[est31](https://github.com/est31)** for their conributions to: `reqwest`
 - **[eupn](https://github.com/eupn)** for their conributions to: `serde`
+- **[evanrittenhouse](https://github.com/evanrittenhouse)** for their conributions to: `tokio`
 - **[evq](https://github.com/evq)** for their conributions to: `chrono`
 - **[fa7ca7](https://github.com/fa7ca7)** for their conributions to: `tokio`
 - **[faern](https://github.com/faern)** for their conributions to: `tokio`
@@ -360,7 +407,9 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[fedeci](https://github.com/fedeci)** for their conributions to: `clap`
 - **[felipesere](https://github.com/felipesere)** for their conributions to: `clap`
 - **[fenhl](https://github.com/fenhl)** for their conributions to: `tokio`
+- **[findepi](https://github.com/findepi)** for their conributions to: `chrono`
 - **[fishface60](https://github.com/fishface60)** for their conributions to: `clap`
+- **[flisky](https://github.com/flisky)** for their conributions to: `reqwest`
 - **[fluxxu](https://github.com/fluxxu)** for their conributions to: `tokio`
 - **[flxo](https://github.com/flxo)** for their conributions to: `tokio`
 - **[flying-sheep](https://github.com/flying-sheep)** for their conributions to: `octocrab`
@@ -368,14 +417,16 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[folkertdev](https://github.com/folkertdev)** for their conributions to: `tokio`
 - **[frederikhors](https://github.com/frederikhors)** for their conributions to: `chrono`
 - **[fredr](https://github.com/fredr)** for their conributions to: `reqwest`
+- **[futreall](https://github.com/futreall)** for their conributions to: `clap`
 - **[gThorondorsen](https://github.com/gThorondorsen)** for their conributions to: `chrono`
 - **[gagbo](https://github.com/gagbo)** for their conributions to: `octocrab`
 - **[gamebox](https://github.com/gamebox)** for their conributions to: `handlebars-rust`
 - **[gardnervickers](https://github.com/gardnervickers)** for their conributions to: `tokio`
+- **[geoffreygarrett](https://github.com/geoffreygarrett)** for their conributions to: `handlebars-rust`
 - **[gftea](https://github.com/gftea)** for their conributions to: `tokio`
+- **[ggoetz](https://github.com/ggoetz)** for their conributions to: `chrono`
 - **[gibbz00](https://github.com/gibbz00)** for their conributions to: `reqwest`
 - **[gibfahn](https://github.com/gibfahn)** for their conributions to: `clap`
-- **[gingerDevilish](https://github.com/gingerDevilish)** for their conributions to: `clap`
 - **[glowing-chemist](https://github.com/glowing-chemist)** for their conributions to: `clap`
 - **[glyphpoch](https://github.com/glyphpoch)** for their conributions to: `reqwest`
 - **[goffrie](https://github.com/goffrie)** for their conributions to: `tokio`
@@ -399,9 +450,9 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[hgomersall](https://github.com/hgomersall)** for their conributions to: `tokio`
 - **[hgrecco](https://github.com/hgrecco)** for their conributions to: `clap`
 - **[hhamana](https://github.com/hhamana)** for their conributions to: `chrono`
-- **[hi-rustin](https://github.com/hi-rustin)** for their conributions to: `tokio`
 - **[hidva](https://github.com/hidva)** for their conributions to: `tokio`
 - **[hitenkoku](https://github.com/hitenkoku)** for their conributions to: `clap`
+- **[hmaka](https://github.com/hmaka)** for their conributions to: `tokio`
 - **[hntd187](https://github.com/hntd187)** for their conributions to: `tokio`
 - **[hoodie](https://github.com/hoodie)** for their conributions to: `clap`
 - **[hootio](https://github.com/hootio)** for their conributions to: `tokio`
@@ -410,8 +461,8 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[huonw](https://github.com/huonw)** for their conributions to: `clap`
 - **[iamjpotts](https://github.com/iamjpotts)** for their conributions to: `octocrab`
 - **[ibraheemdev](https://github.com/ibraheemdev)** for their conributions to: `tokio`
-- **[icedrocket](https://github.com/icedrocket)** for their conributions to: `tokio`
 - **[ijanos](https://github.com/ijanos)** for their conributions to: `chrono`
+- **[ilyagr](https://github.com/ilyagr)** for their conributions to: `clap`
 - **[intgr](https://github.com/intgr)** for their conributions to: `clap`
 - **[ipetkov](https://github.com/ipetkov)** for their conributions to: `tokio`
 - **[is](https://github.com/is)** for their conributions to: `reqwest`
@@ -424,6 +475,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[jasondavies](https://github.com/jasondavies)** for their conributions to: `tokio`
 - **[jasta](https://github.com/jasta)** for their conributions to: `tokio`
 - **[jbuckmccready](https://github.com/jbuckmccready)** for their conributions to: `tokio`
+- **[jcrqr](https://github.com/jcrqr)** for their conributions to: `octocrab`
 - **[jdisanti](https://github.com/jdisanti)** for their conributions to: `tokio`
 - **[jebrosen](https://github.com/jebrosen)** for their conributions to: `tokio`
 - **[jeehoonkang](https://github.com/jeehoonkang)** for their conributions to: `tokio`
@@ -431,17 +483,16 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[jgall](https://github.com/jgall)** for their conributions to: `reqwest`
 - **[jimmycuadra](https://github.com/jimmycuadra)** for their conributions to: `clap`
 - **[jneem](https://github.com/jneem)** for their conributions to: `reqwest`
+- **[jofas](https://github.com/jofas)** for their conributions to: `tokio`
 - **[johncf](https://github.com/johncf)** for their conributions to: `tokio`
 - **[johnschug](https://github.com/johnschug)** for their conributions to: `anyhow`
 - **[joriskleiber](https://github.com/joriskleiber)** for their conributions to: `tokio`
 - **[joroKr21](https://github.com/joroKr21)** for their conributions to: `chrono`
 - **[joseluis](https://github.com/joseluis)** for their conributions to: `crates-io-api`
-- **[joshka](https://github.com/joshka)** for their conributions to: `tokio`
 - **[joshleeb](https://github.com/joshleeb)** for their conributions to: `handlebars-rust`
-- **[joshtriplett](https://github.com/joshtriplett)** for their conributions to: `clap`
-- **[jothan](https://github.com/jothan)** for their conributions to: `tokio`
 - **[jpgrayson](https://github.com/jpgrayson)** for their conributions to: `clap`
 - **[jporwal05](https://github.com/jporwal05)** for their conributions to: `clap`
+- **[jrandolf](https://github.com/jrandolf)** for their conributions to: `unfmt`
 - **[jrobsonchase](https://github.com/jrobsonchase)** for their conributions to: `serde`
 - **[jsoref](https://github.com/jsoref)** for their conributions to: `tokio`
 - **[jswrenn](https://github.com/jswrenn)** for their conributions to: `tokio`
@@ -449,7 +500,6 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[jtmoon79](https://github.com/jtmoon79)** for their conributions to: `chrono`
 - **[jturner314-nrl](https://github.com/jturner314-nrl)** for their conributions to: `clap`
 - **[juleskers](https://github.com/juleskers)** for their conributions to: `tokio`
-- **[jun-sheaf](https://github.com/jun-sheaf)** for their conributions to: `unfmt`
 - **[justjavac](https://github.com/justjavac)** for their conributions to: `clap`
 - **[jwillbold](https://github.com/jwillbold)** for their conributions to: `serde`
 - **[jxs](https://github.com/jxs)** for their conributions to: `tokio`
@@ -469,7 +519,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[kitlith](https://github.com/kitlith)** for their conributions to: `clap`
 - **[kleimkuhler](https://github.com/kleimkuhler)** for their conributions to: `tokio`
 - **[klensy](https://github.com/klensy)** for their conributions to: `clap`
-- **[knidarkness](https://github.com/knidarkness)** for their conributions to: `clap`
+- **[klnusbaum](https://github.com/klnusbaum)** for their conributions to: `chrono`
 - **[knight42](https://github.com/knight42)** for their conributions to: `reqwest`
 - **[knightpp](https://github.com/knightpp)** for their conributions to: `clap`
 - **[kodieg](https://github.com/kodieg)** for their conributions to: `reqwest`
@@ -480,19 +530,24 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[kpp](https://github.com/kpp)** for their conributions to: `tokio`
 - **[kpreid](https://github.com/kpreid)** for their conributions to: `tokio`
 - **[kraai](https://github.com/kraai)** for their conributions to: `clap`
+- **[krobelus](https://github.com/krobelus)** for their conributions to: `clap`
 - **[ktossell](https://github.com/ktossell)** for their conributions to: `chrono`
 - **[kurtbuilds](https://github.com/kurtbuilds)** for their conributions to: `clap`
 - **[kuviman](https://github.com/kuviman)** for their conributions to: `clap`
 - **[kvnvelasco](https://github.com/kvnvelasco)** for their conributions to: `json`
+- **[kyle-leonhard](https://github.com/kyle-leonhard)** for their conributions to: `octocrab`
 - **[kzys](https://github.com/kzys)** for their conributions to: `tokio`
 - **[laktak](https://github.com/laktak)** for their conributions to: `json`
 - **[lancecarlson](https://github.com/lancecarlson)** for their conributions to: `chrono`
 - **[lanesawyer](https://github.com/lanesawyer)** for their conributions to: `clap`
+- **[lblack00](https://github.com/lblack00)** for their conributions to: `tokio`
 - **[ldm0](https://github.com/ldm0)** for their conributions to: `clap`
 - **[leshow](https://github.com/leshow)** for their conributions to: `tokio`
 - **[lifthrasiir](https://github.com/lifthrasiir)** for their conributions to: `chrono`
+- **[linclelinkpart5](https://github.com/linclelinkpart5)** for their conributions to: `strum`
 - **[lineville](https://github.com/lineville)** for their conributions to: `octocrab`
 - **[linw1995](https://github.com/linw1995)** for their conributions to: `handlebars-rust`
+- **[linyihai](https://github.com/linyihai)** for their conributions to: `reqwest`
 - **[liranringel](https://github.com/liranringel)** for their conributions to: `tokio`
 - **[little-arhat](https://github.com/little-arhat)** for their conributions to: `json`
 - **[liufuyang](https://github.com/liufuyang)** for their conributions to: `tokio`
@@ -500,6 +555,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[llebout](https://github.com/llebout)** for their conributions to: `tokio`
 - **[lo48576](https://github.com/lo48576)** for their conributions to: `strum`
 - **[logansquirel](https://github.com/logansquirel)** for their conributions to: `clap`
+- **[loispostula](https://github.com/loispostula)** for their conributions to: `octocrab`
 - **[loloicci](https://github.com/loloicci)** for their conributions to: `clap`
 - **[lovasoa](https://github.com/lovasoa)** for their conributions to: `handlebars-rust`
 - **[lovebug356](https://github.com/lovebug356)** for their conributions to: `tokio`
@@ -508,13 +564,18 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[lucacasonato](https://github.com/lucacasonato)** for their conributions to: `json`
 - **[luqmana](https://github.com/luqmana)** for their conributions to: `reqwest`
 - **[mTsBucy1](https://github.com/mTsBucy1)** for their conributions to: `tokio`
+- **[madadam](https://github.com/madadam)** for their conributions to: `tokio`
 - **[maflcko](https://github.com/maflcko)** for their conributions to: `octocrab`
+- **[magistau](https://github.com/magistau)** for their conributions to: `unfmt`
 - **[malbarbo](https://github.com/malbarbo)** for their conributions to: `clap`
 - **[maminrayej](https://github.com/maminrayej)** for their conributions to: `tokio`
 - **[manchicken](https://github.com/manchicken)** for their conributions to: `octocrab`
 - **[manuel-woelker](https://github.com/manuel-woelker)** for their conributions to: `tokio`
 - **[mapkts](https://github.com/mapkts)** for their conributions to: `tokio`
+- **[marcoieni](https://github.com/marcoieni)** for their conributions to: `octocrab`
 - **[marcospb19](https://github.com/marcospb19)** for their conributions to: `tokio`
+- **[mart-mihkel](https://github.com/mart-mihkel)** for their conributions to: `clap`
+- **[martin-g](https://github.com/martin-g)** for their conributions to: `tokio`
 - **[martinvonz](https://github.com/martinvonz)** for their conributions to: `clap`
 - **[matheus-consoli](https://github.com/matheus-consoli)** for their conributions to: `tokio`
 - **[mathstuf](https://github.com/mathstuf)** for their conributions to: `tokio`
@@ -528,15 +589,20 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[mbhall88](https://github.com/mbhall88)** for their conributions to: `clap`
 - **[mbirtwell](https://github.com/mbirtwell)** for their conributions to: `octocrab`
 - **[mbrobbel](https://github.com/mbrobbel)** for their conributions to: `tokio`
+- **[megaserg](https://github.com/megaserg)** for their conributions to: `clap`
 - **[mental32](https://github.com/mental32)** for their conributions to: `tokio`
+- **[mernen](https://github.com/mernen)** for their conributions to: `clap`
 - **[mexus](https://github.com/mexus)** for their conributions to: `tokio`
 - **[mgeisler](https://github.com/mgeisler)** for their conributions to: `clap`
 - **[michalsrb](https://github.com/michalsrb)** for their conributions to: `chrono`
+- **[mike-oi](https://github.com/mike-oi)** for their conributions to: `octocrab`
 - **[mitsuhiko](https://github.com/mitsuhiko)** for their conributions to: `serde`
+- **[mkrasnitski](https://github.com/mkrasnitski)** for their conributions to: `octocrab`
 - **[mkroening](https://github.com/mkroening)** for their conributions to: `chrono`
 - **[mkroman](https://github.com/mkroman)** for their conributions to: `octocrab`
 - **[mox692](https://github.com/mox692)** for their conributions to: `tokio`
 - **[mqudsi](https://github.com/mqudsi)** for their conributions to: `chrono`
+- **[mrnossiom](https://github.com/mrnossiom)** for their conributions to: `handlebars-rust`
 - **[mtn](https://github.com/mtn)** for their conributions to: `json`
 - **[musoke](https://github.com/musoke)** for their conributions to: `clap`
 - **[mxinden](https://github.com/mxinden)** for their conributions to: `tokio`
@@ -551,8 +617,10 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[newAM](https://github.com/newAM)** for their conributions to: `clap`
 - **[nibon7](https://github.com/nibon7)** for their conributions to: `clap`
 - **[nicflower](https://github.com/nicflower)** for their conributions to: `tokio`
+- **[nickkuk](https://github.com/nickkuk)** for their conributions to: `tokio`
 - **[nickvollmar](https://github.com/nickvollmar)** for their conributions to: `handlebars-rust`
 - **[niklasad1](https://github.com/niklasad1)** for their conributions to: `serde`
+- **[niklasf](https://github.com/niklasf)** for their conributions to: `tokio`
 - **[nirasan](https://github.com/nirasan)** for their conributions to: `reqwest`
 - **[nivkner](https://github.com/nivkner)** for their conributions to: `tokio`
 - **[nkbai](https://github.com/nkbai)** for their conributions to: `tokio`
@@ -561,30 +629,31 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[not-my-profile](https://github.com/not-my-profile)** for their conributions to: `clap`
 - **[notgull](https://github.com/notgull)** for their conributions to: `tokio`
 - **[novacrazy](https://github.com/novacrazy)** for their conributions to: `chrono`
+- **[nskins](https://github.com/nskins)** for their conributions to: `tokio`
+- **[nurmohammed840](https://github.com/nurmohammed840)** for their conributions to: `tokio`
 - **[nvzqz](https://github.com/nvzqz)** for their conributions to: `tokio`
 - **[nwolber](https://github.com/nwolber)** for their conributions to: `reqwest`
 - **[nylonicious](https://github.com/nylonicious)** for their conributions to: `tokio`
 - **[oberien](https://github.com/oberien)** for their conributions to: `tokio`
-- **[obi1kenobi](https://github.com/obi1kenobi)** for their conributions to: `tokio`
 - **[oconnor663](https://github.com/oconnor663)** for their conributions to: `tokio`
 - **[ohsayan](https://github.com/ohsayan)** for their conributions to: `octocrab`
+- **[oknozor](https://github.com/oknozor)** for their conributions to: `octocrab`
 - **[olegnn](https://github.com/olegnn)** for their conributions to: `tokio`
 - **[olix0r](https://github.com/olix0r)** for their conributions to: `tokio`
 - **[omar25h](https://github.com/omar25h)** for their conributions to: `clap`
+- **[omertuc](https://github.com/omertuc)** for their conributions to: `clap`
 - **[omjadas](https://github.com/omjadas)** for their conributions to: `clap`
 - **[orhanbalci](https://github.com/orhanbalci)** for their conributions to: `crates-io-api`
 - **[orhun](https://github.com/orhun)** for their conributions to: `clap`
 - **[orion78fr](https://github.com/orion78fr)** for their conributions to: `chrono`
 - **[osa1](https://github.com/osa1)** for their conributions to: `tokio`
-- **[osiewicz](https://github.com/osiewicz)** for their conributions to: `json`
 - **[overdrivenpotato](https://github.com/overdrivenpotato)** for their conributions to: `json`
 - **[passcod](https://github.com/passcod)** for their conributions to: `tokio`
 - **[patrick-gu](https://github.com/patrick-gu)** for their conributions to: `clap`
 - **[pcwalton](https://github.com/pcwalton)** for their conributions to: `serde`
 - **[peter-glotfelty](https://github.com/peter-glotfelty)** for their conributions to: `strum`
-- **[peter-kehl](https://github.com/peter-kehl)** for their conributions to: `clap`
+- **[peter-lyons-kehl](https://github.com/peter-lyons-kehl)** for their conributions to: `clap`
 - **[pfernie](https://github.com/pfernie)** for their conributions to: `reqwest`
-- **[phankydn](https://github.com/phankydn)** for their conributions to: `reqwest`
 - **[phungleson](https://github.com/phungleson)** for their conributions to: `tokio`
 - **[pickfire](https://github.com/pickfire)** for their conributions to: `clap`
 - **[pitdicker](https://github.com/pitdicker)** for their conributions to: `chrono`
@@ -598,6 +667,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[porglezomp](https://github.com/porglezomp)** for their conributions to: `clap`
 - **[pretzelhammer](https://github.com/pretzelhammer)** for their conributions to: `clap`
 - **[progmboy](https://github.com/progmboy)** for their conributions to: `handlebars-rust`
+- **[purplesyringa](https://github.com/purplesyringa)** for their conributions to: `json`
 - **[pzmarzly](https://github.com/pzmarzly)** for their conributions to: `clap`
 - **[qbx2](https://github.com/qbx2)** for their conributions to: `octocrab`
 - **[quodlibetor](https://github.com/quodlibetor)** for their conributions to: `chrono`
@@ -605,10 +675,10 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[rap2hpoutre](https://github.com/rap2hpoutre)** for their conributions to: `reqwest`
 - **[rcoh](https://github.com/rcoh)** for their conributions to: `tokio`
 - **[renato-zannon](https://github.com/renato-zannon)** for their conributions to: `serde`
-- **[retrhelo](https://github.com/retrhelo)** for their conributions to: `chrono`
 - **[rfdonnelly](https://github.com/rfdonnelly)** for their conributions to: `clap`
 - **[rharriso](https://github.com/rharriso)** for their conributions to: `clap`
 - **[rhysd](https://github.com/rhysd)** for their conributions to: `clap`
+- **[richard-uk1](https://github.com/richard-uk1)** for their conributions to: `serde`
 - **[rivy](https://github.com/rivy)** for their conributions to: `clap`
 - **[rjzak](https://github.com/rjzak)** for their conributions to: `tokio`
 - **[rkrasiuk](https://github.com/rkrasiuk)** for their conributions to: `clap`
@@ -628,8 +698,8 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[sashashura](https://github.com/sashashura)** for their conributions to: `clap`
 - **[satakuma](https://github.com/satakuma)** for their conributions to: `tokio`
 - **[savish](https://github.com/savish)** for their conributions to: `clap`
-- **[sb64](https://github.com/sb64)** for their conributions to: `tokio`
 - **[sbstp](https://github.com/sbstp)** for their conributions to: `tokio`
+- **[sby1ce](https://github.com/sby1ce)** for their conributions to: `chrono`
 - **[scampi](https://github.com/scampi)** for their conributions to: `clap`
 - **[scarf005](https://github.com/scarf005)** for their conributions to: `chrono`
 - **[schrieveslaach](https://github.com/schrieveslaach)** for their conributions to: `chrono`
@@ -641,13 +711,16 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[seunghunee](https://github.com/seunghunee)** for their conributions to: `tokio`
 - **[severen](https://github.com/severen)** for their conributions to: `clap`
 - **[sgrif](https://github.com/sgrif)** for their conributions to: `serde`
+- **[shannmu](https://github.com/shannmu)** for their conributions to: `clap`
 - **[shinglyu](https://github.com/shinglyu)** for their conributions to: `serde`
 - **[shouya](https://github.com/shouya)** for their conributions to: `reqwest`
 - **[simonlindholm](https://github.com/simonlindholm)** for their conributions to: `tokio`
 - **[sinkuu](https://github.com/sinkuu)** for their conributions to: `tokio`
 - **[sirhcel](https://github.com/sirhcel)** for their conributions to: `crates-io-api`
 - **[smarnach](https://github.com/smarnach)** for their conributions to: `tokio`
+- **[smoqadam](https://github.com/smoqadam)** for their conributions to: `clap`
 - **[soc](https://github.com/soc)** for their conributions to: `dirs-rs`
+- **[soerenmeier](https://github.com/soerenmeier)** for their conributions to: `tokio`
 - **[softprops](https://github.com/softprops)** for their conributions to: `handlebars-rust`
 - **[sorz](https://github.com/sorz)** for their conributions to: `tokio`
 - **[sphinxc0re](https://github.com/sphinxc0re)** for their conributions to: `clap`
@@ -655,9 +728,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[spk](https://github.com/spk)** for their conributions to: `reqwest`
 - **[sru](https://github.com/sru)** for their conributions to: `clap`
 - **[st3iny](https://github.com/st3iny)** for their conributions to: `octocrab`
-- **[starkat99](https://github.com/starkat99)** for their conributions to: `clap`
 - **[stbuehler](https://github.com/stbuehler)** for their conributions to: `tokio`
-- **[steffahn](https://github.com/steffahn)** for their conributions to: `tokio`
 - **[stepancheg](https://github.com/stepancheg)** for their conributions to: `tokio`
 - **[stevelr](https://github.com/stevelr)** for their conributions to: `reqwest`
 - **[stevenengler](https://github.com/stevenengler)** for their conributions to: `clap`
@@ -667,7 +738,9 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[sunjay](https://github.com/sunjay)** for their conributions to: `tokio`
 - **[sunng87](https://github.com/sunng87)** for their conributions to: `handlebars-rust`
 - **[sunshowers](https://github.com/sunshowers)** for their conributions to: `tokio`
+- **[surban](https://github.com/surban)** for their conributions to: `tokio`
 - **[suryapandian](https://github.com/suryapandian)** for their conributions to: `octocrab`
+- **[swlynch99](https://github.com/swlynch99)** for their conributions to: `json`
 - **[tafia](https://github.com/tafia)** for their conributions to: `reqwest`
 - **[tage64](https://github.com/tage64)** for their conributions to: `serde`
 - **[talklittle](https://github.com/talklittle)** for their conributions to: `clap`
@@ -675,14 +748,18 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[terakilobyte](https://github.com/terakilobyte)** for their conributions to: `octocrab`
 - **[tertsdiepraam](https://github.com/tertsdiepraam)** for their conributions to: `clap`
 - **[tesaguri](https://github.com/tesaguri)** for their conributions to: `tokio`
-- **[tesuji](https://github.com/tesuji)** for their conributions to: `reqwest`
 - **[tglane](https://github.com/tglane)** for their conributions to: `tokio`
-- **[thecaralice](https://github.com/thecaralice)** for their conributions to: `unfmt`
 - **[thegedge](https://github.com/thegedge)** for their conributions to: `handlebars-rust`
+- **[thekeys93](https://github.com/thekeys93)** for their conributions to: `tokio`
+- **[therealprof](https://github.com/therealprof)** for their conributions to: `clap`
+- **[thomas-zahner](https://github.com/thomas-zahner)** for their conributions to: `clap`
 - **[thomasfermi](https://github.com/thomasfermi)** for their conributions to: `clap`
 - **[thomastaylor312](https://github.com/thomastaylor312)** for their conributions to: `reqwest`
 - **[thomcc](https://github.com/thomcc)** for their conributions to: `anyhow`
+- **[tiif](https://github.com/tiif)** for their conributions to: `tokio`
 - **[tijsvd](https://github.com/tijsvd)** for their conributions to: `tokio`
+- **[timonv](https://github.com/timonv)** for their conributions to: `octocrab`
+- **[tkoyasak](https://github.com/tkoyasak)** for their conributions to: `tokio`
 - **[tmccombs](https://github.com/tmccombs)** for their conributions to: `clap`
 - **[tobz](https://github.com/tobz)** for their conributions to: `tokio`
 - **[tobz1000](https://github.com/tobz1000)** for their conributions to: `chrono`
@@ -710,19 +787,22 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[uklotzde](https://github.com/uklotzde)** for their conributions to: `tokio`
 - **[umanwizard](https://github.com/umanwizard)** for their conributions to: `chrono`
 - **[vegai](https://github.com/vegai)** for their conributions to: `json`
+- **[vi](https://github.com/vi)** for their conributions to: `tokio`
 - **[victor-timofei](https://github.com/victor-timofei)** for their conributions to: `tokio`
+- **[vilgotf](https://github.com/vilgotf)** for their conributions to: `tokio`
 - **[vincascm](https://github.com/vincascm)** for their conributions to: `serde`
 - **[vitalyd](https://github.com/vitalyd)** for their conributions to: `tokio`
 - **[vitorenesduarte](https://github.com/vitorenesduarte)** for their conributions to: `tokio`
+- **[vlad1slav](https://github.com/vlad1slav)** for their conributions to: `octocrab`
 - **[vojtechkral](https://github.com/vojtechkral)** for their conributions to: `tokio`
 - **[vorner](https://github.com/vorner)** for their conributions to: `tokio`
+- **[vxzyfx](https://github.com/vxzyfx)** for their conributions to: `tokio`
 - **[wathenjiang](https://github.com/wathenjiang)** for their conributions to: `tokio`
 - **[wayofthepie](https://github.com/wayofthepie)** for their conributions to: `octocrab`
 - **[wdv4758h](https://github.com/wdv4758h)** for their conributions to: `clap`
 - **[williamyaoh](https://github.com/williamyaoh)** for their conributions to: `clap`
 - **[willmurphyscode](https://github.com/willmurphyscode)** for their conributions to: `clap`
 - **[workingjubilee](https://github.com/workingjubilee)** for their conributions to: `chrono`
-- **[wtfiscrq](https://github.com/wtfiscrq)** for their conributions to: `octocrab`
 - **[wutchzone](https://github.com/wutchzone)** for their conributions to: `tokio`
 - **[wyatt-herkamp](https://github.com/wyatt-herkamp)** for their conributions to: `strum`
 - **[x1957](https://github.com/x1957)** for their conributions to: `reqwest`
@@ -732,12 +812,12 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[yhakbar](https://github.com/yhakbar)** for their conributions to: `handlebars-rust`
 - **[yjh0502](https://github.com/yjh0502)** for their conributions to: `json`
 - **[yotamofek](https://github.com/yotamofek)** for their conributions to: `tokio`
-- **[yu-re-ka](https://github.com/yu-re-ka)** for their conributions to: `chrono`
 - **[yuja](https://github.com/yuja)** for their conributions to: `tokio`
 - **[yujincheng08](https://github.com/yujincheng08)** for their conributions to: `reqwest`
+- **[yuyuyureka](https://github.com/yuyuyureka)** for their conributions to: `chrono`
 - **[zaharidichev](https://github.com/zaharidichev)** for their conributions to: `tokio`
 - **[zancas](https://github.com/zancas)** for their conributions to: `clap`
-- **[zekisherif](https://github.com/zekisherif)** for their conributions to: `tokio`
+- **[zanieb](https://github.com/zanieb)** for their conributions to: `clap`
 - **[zeroed](https://github.com/zeroed)** for their conributions to: `tokio`
 - **[zh-jq](https://github.com/zh-jq)** for their conributions to: `tokio`
 - **[zicklag](https://github.com/zicklag)** for their conributions to: `crates-io-api`
@@ -746,7 +826,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - **[zonyitoo](https://github.com/zonyitoo)** for their conributions to: `tokio`
 - **[zyctree](https://github.com/zyctree)** for their conributions to: `tokio`
 
-And 1034 other cool humans for their contributions, who haven't made it to this list yet.
+And 1105 other cool humans for their contributions, who haven't made it to this list yet.
 
 ---
 
