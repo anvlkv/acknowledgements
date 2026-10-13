@@ -12,7 +12,7 @@ I hereby express my sincere gratitude and appreciation for the code contribution
 - Contributors of `{{DepAndNames.crate_name}}`: {{#each DepAndNames.contributors}} {{#if this.[1]}}**[{{#if ../../mention}}@{{/if}}{{this.[0]}}]({{this.[1]}})**{{else}}**{{this.[0]}}**{{/if}}{{#unless @last}}, {{/unless}}{{/each}}
   {{/if}}
   {{#if NameAndDeps}}
-- {{#if NameAndDeps.profile_url}}**[{{#if ../../mention}}@{{/if}}{{NameAndDeps.name}}]({{NameAndDeps.profile_url}})**{{else}}**{{NameAndDeps.name}}**{{/if}} for their conributions to: {{#each NameAndDeps.crates}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}
+- {{#if NameAndDeps.profile_url}}**[{{#if ../../mention}}@{{/if}}{{NameAndDeps.name}}]({{NameAndDeps.profile_url}})**{{else}}**{{NameAndDeps.name}}**{{/if}} for their contributions to: {{#each NameAndDeps.crates}}`{{this}}`{{#unless @last}}, {{/unless}}{{/each}}
   {{/if}}
 {{/each}}
 
