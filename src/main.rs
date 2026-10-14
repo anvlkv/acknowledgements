@@ -5,9 +5,13 @@ use std::{
 
 use cargo_toml::{Dependency, Manifest};
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
+use deps_bundler::{BundlerDependency, DependencyGroup};
+use deps_composer::{ComposerDependency, ComposerSection};
 use deps_core::DependencySource;
-use deps_core::ParseResult as CoreParseResult;
+use deps_go::{GoDependency, GoDirective};
+use deps_maven::{MavenDependency, MavenScope};
 use deps_npm::{NpmDependency, NpmDependencySection};
+use deps_pypi::PypiDependencySection;
 use handlebars::Handlebars;
 use octocrab::models::RateLimit;
 use serde::{Deserialize, Serialize};
@@ -86,6 +90,7 @@ enum Commands {
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, strum_macros::Display, strum_macros::EnumString)]
+#[serde(rename_all = "kebab-case")]
 enum Format {
     /// Name of the contributor and count of contributions
     NameAndCount,
@@ -96,6 +101,7 @@ enum Format {
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, strum_macros::Display, strum_macros::EnumString)]
+#[serde(rename_all = "kebab-case")]
 enum Breadth {
     /// Non-optional dependencies
     NonOpt,
@@ -283,6 +289,7 @@ async fn run() -> anyhow::Result<()> {
                 let count = collect_and_ingest(
                     &manifest,
                     eco,
+                    &args.breadth,
                     &mut github_sources,
                     &mut other_sources,
                     &mut fetch_ecosystem,
@@ -361,8 +368,12 @@ async fn run() -> anyhow::Result<()> {
 
             let packages = response.json::<Vec<EcosysteMsPackage>>().await?;
 
-            if let Some(repo) = packages.into_iter().find_map(|p| p.repository_url) {
-                let repo = normalize_repo_url(&repo);
+            if let Some(repo) = packages
+                .into_iter()
+                .find_map(|p| p.repository_url)
+                .map(|repo| normalize_repo_url(&repo))
+                .filter(|repo| !repo.is_empty())
+            {
                 write_cached(c_key.as_str(), repo.clone()).await;
                 repo_sx.send(repo)?;
             } else {
@@ -374,6 +385,11 @@ async fn run() -> anyhow::Result<()> {
     });
 
     while let Some(git) = repo_rx.recv().await {
+        let git = git.trim();
+        if git.is_empty() {
+            continue;
+        }
+        let git = go_github_mirror(git).unwrap_or_else(|| git.to_string());
         if git.starts_with(GITHUB_BASE) || git.starts_with(GITHUB_AT_GIT) {
             _ = github_sources.insert(git.replace(GITHUB_AT_GIT, GITHUB_BASE).replace(".git", ""));
         } else {
@@ -442,9 +458,23 @@ async fn run() -> anyhow::Result<()> {
                         let mut contributors = vec![];
                         let repo_handler = github_client.repos(owner, repo);
                         let mut limit = gh_rate_limited(None, &github_client).await?;
-                        let data = repo_handler.get().await?;
+                        let data = match repo_handler.get().await {
+                            Ok(data) => data,
+                            Err(e) => {
+                                eprintln!("skipping {owner}/{repo}: GitHub request failed: {e}");
+                                continue;
+                            }
+                        };
                         limit = gh_rate_limited(Some(limit), &github_client).await?;
-                        let first = repo_handler.list_contributors().send().await?;
+                        let first = match repo_handler.list_contributors().send().await {
+                            Ok(first) => first,
+                            Err(e) => {
+                                eprintln!(
+                                    "skipping {owner}/{repo}: listing contributors failed: {e}"
+                                );
+                                continue;
+                            }
+                        };
 
                         for c in first.items.iter() {
                             contrib_sx.send((
@@ -460,8 +490,20 @@ async fn run() -> anyhow::Result<()> {
                         if let Some(pages) = first.number_of_pages() {
                             for page in 2..=pages {
                                 limit = gh_rate_limited(Some(limit), &github_client).await?;
-                                let next =
-                                    repo_handler.list_contributors().page(page).send().await?;
+                                let next = match repo_handler
+                                    .list_contributors()
+                                    .page(page)
+                                    .send()
+                                    .await
+                                {
+                                    Ok(next) => next,
+                                    Err(e) => {
+                                        eprintln!(
+                                            "stopped paginating {owner}/{repo} at page {page}: {e}"
+                                        );
+                                        break;
+                                    }
+                                };
                                 for c in next.items.iter() {
                                     contrib_sx.send((
                                         data.name.clone(),
@@ -503,20 +545,26 @@ async fn run() -> anyhow::Result<()> {
                         c.commits,
                     ))?;
                 }
-            } else {
-                let parsed = unformat!("https://{}/{}/{}", &src);
-                if let Some((base, owner, repo)) = parsed {
-                    // split-off any monorepo paths
-                    let repo = repo.split("/").next().unwrap_or(repo);
+                continue;
+            }
 
-                    let url = format!("https://{base}/api/v4/projects/{owner}%2F{repo}");
-                    println!("fetching {base} data for: {owner}/{repo}");
-                    let data = reqwest::get(&url).await?.json::<GitLabProject>().await?;
-                    let url = format!("{url}/repository/contributors");
-                    let contributors = reqwest::get(&url)
-                        .await?
-                        .json::<Vec<GitLabContributor>>()
-                        .await?;
+            let Some((base, owner, repo)) = unformat!("https://{}/{}/{}", &src) else {
+                eprintln!("skipping {src}: not a supported repository URL");
+                continue;
+            };
+
+            if !is_gitlab_host(base) {
+                eprintln!(
+                    "skipping {src}: unsupported source host (only github.com and gitlab instances are queried)"
+                );
+                continue;
+            }
+
+            // split-off any monorepo paths
+            let repo = repo.split("/").next().unwrap_or(repo);
+
+            match fetch_gitlab_contributors(base, owner, repo).await {
+                Ok((data, contributors)) => {
                     for c in contributors.iter() {
                         contrib_sx.send((
                             data.name.clone(),
@@ -527,8 +575,9 @@ async fn run() -> anyhow::Result<()> {
                         ))?;
                     }
                     write_cached(&src, (data, contributors)).await;
-                } else {
-                    eprintln!("failed to parse gitlab url: {src}");
+                }
+                Err(e) => {
+                    eprintln!("skipping {base} project {owner}/{repo}: {e}");
                 }
             }
         }
@@ -1126,12 +1175,18 @@ fn npm_deps(manifest: &PathBuf, breadth: &Breadth) -> anyhow::Result<Vec<NpmDepe
         .collect())
 }
 
-/// Parses a manifest with the ecosystem's `deps-*` parser, then classifies each dependency
-/// through the shared `deps_core` traits — so every ecosystem beyond Cargo/npm needs no
-/// per-crate type handling here. Returns the number of dependencies seen.
+/// Parses a manifest with the ecosystem's `deps-*` parser, keeps the dependency sections
+/// selected by `breadth`, then classifies each kept dependency into a GitHub source, another
+/// (GitLab) source, or a public-registry lookup. Returns the number of kept dependencies.
+///
+/// Each ecosystem exposes its "section" (Go directness, Gemfile group, PyPI PEP 621 section,
+/// Maven scope, ...) through a distinct concrete field the shared `deps_core::Dependency`
+/// trait does not surface, so the per-ecosystem breadth filter lives in the small
+/// `*_selected` helpers below rather than behind trait objects.
 fn collect_and_ingest(
     manifest: &PathBuf,
     eco: Ecosystem,
+    breadth: &Breadth,
     github_sources: &mut HashSet<String>,
     other_sources: &mut HashSet<String>,
     fetch_ecosystem: &mut Vec<(String, String)>,
@@ -1141,47 +1196,261 @@ fn collect_and_ingest(
     let uri = Url::from_file_path(&manifest)
         .map_err(|_| anyhow::anyhow!("invalid manifest path: {}", manifest.display()))?;
 
-    let result: Box<dyn CoreParseResult> = match eco {
-        Ecosystem::Pypi => Box::new(deps_pypi::PypiParser::new().parse_content(&content, &uri)?),
-        Ecosystem::Go => Box::new(deps_go::parse_go_mod(&content, &uri)?),
-        Ecosystem::Bundler => Box::new(deps_bundler::parse_gemfile(&content, &uri)?),
-        Ecosystem::Composer => Box::new(deps_composer::parse_composer_json(&content, &uri)?),
-        Ecosystem::Maven => Box::new(deps_maven::parse_pom_xml(&content, &uri)?),
-        Ecosystem::NuGet => Box::new(deps_nuget::parse_project_file(&content, &uri)?),
-        Ecosystem::Cargo | Ecosystem::Npm => unreachable!("handled by their own branches"),
-    };
+    let mut kept = 0usize;
 
-    let dependencies = result.dependencies();
-    let count = dependencies.len();
-
-    for dep in dependencies {
-        let name = dep.name().as_str().to_string();
-        match dep.source() {
-            DependencySource::Git { url, .. } => {
-                if url.starts_with("https://github.com") || url.starts_with("git@github.com") {
-                    _ = github_sources.insert(url.replace("git@github.com", "https://github.com"));
-                } else {
-                    _ = other_sources.insert(url);
+    match eco {
+        Ecosystem::Pypi => {
+            let parsed = deps_pypi::PypiParser::new().parse_content(&content, &uri)?;
+            for dep in parsed.dependencies {
+                if !pypi_section_selected(&dep.section, breadth) {
+                    continue;
                 }
+                ingest_dep(
+                    eco,
+                    dep.name.as_str(),
+                    &dep.source,
+                    github_sources,
+                    other_sources,
+                    fetch_ecosystem,
+                );
+                kept += 1;
             }
-            DependencySource::Registry => {
-                if let Some(purl) = eco.purl(&name) {
-                    fetch_ecosystem.push((name, purl));
-                }
-            }
-            // Path/Workspace/Sdk/Url deps and private (custom/alternate) registries are not
-            // resolvable against the public ecosyste.ms index.
-            _ => {}
         }
+        Ecosystem::Go => {
+            let parsed = deps_go::parse_go_mod(&content, &uri)?;
+            for dep in parsed.dependencies {
+                if !go_dep_selected(&dep, breadth) {
+                    continue;
+                }
+                ingest_dep(
+                    eco,
+                    dep.module_path.as_str(),
+                    &dep.source,
+                    github_sources,
+                    other_sources,
+                    fetch_ecosystem,
+                );
+                kept += 1;
+            }
+        }
+        Ecosystem::Bundler => {
+            let parsed = deps_bundler::parse_gemfile(&content, &uri)?;
+            for dep in parsed.dependencies {
+                if !bundler_dep_selected(&dep, breadth) {
+                    continue;
+                }
+                ingest_dep(
+                    eco,
+                    dep.name.as_str(),
+                    &dep.source,
+                    github_sources,
+                    other_sources,
+                    fetch_ecosystem,
+                );
+                kept += 1;
+            }
+        }
+        Ecosystem::Composer => {
+            let parsed = deps_composer::parse_composer_json(&content, &uri)?;
+            for dep in parsed.dependencies {
+                if !composer_dep_selected(&dep, breadth) {
+                    continue;
+                }
+                ingest_dep(
+                    eco,
+                    dep.name.as_str(),
+                    &dep.source,
+                    github_sources,
+                    other_sources,
+                    fetch_ecosystem,
+                );
+                kept += 1;
+            }
+        }
+        Ecosystem::Maven => {
+            let parsed = deps_maven::parse_pom_xml(&content, &uri)?;
+            for dep in parsed.dependencies {
+                if !maven_dep_selected(&dep, breadth) {
+                    continue;
+                }
+                ingest_dep(
+                    eco,
+                    dep.name.as_str(),
+                    &dep.source,
+                    github_sources,
+                    other_sources,
+                    fetch_ecosystem,
+                );
+                kept += 1;
+            }
+        }
+        Ecosystem::NuGet => {
+            // NuGet project files carry no dependency section or scope, so there is nothing to
+            // filter by breadth — every declared package is treated as a runtime dependency.
+            let parsed = deps_nuget::parse_project_file(&content, &uri)?;
+            for dep in parsed.dependencies {
+                ingest_dep(
+                    eco,
+                    dep.name.as_str(),
+                    &dep.source,
+                    github_sources,
+                    other_sources,
+                    fetch_ecosystem,
+                );
+                kept += 1;
+            }
+        }
+        Ecosystem::Cargo | Ecosystem::Npm => unreachable!("handled by their own branches"),
     }
 
-    Ok(count)
+    Ok(kept)
+}
+
+/// Classifies one parsed dependency: GitHub repos become GitHub sources, any other Git URL
+/// becomes a candidate "other" (GitLab) source, and public-registry packages become an
+/// ecosyste.ms lookup keyed by the ecosystem's purl.
+fn ingest_dep(
+    eco: Ecosystem,
+    name: &str,
+    source: &DependencySource,
+    github_sources: &mut HashSet<String>,
+    other_sources: &mut HashSet<String>,
+    fetch_ecosystem: &mut Vec<(String, String)>,
+) {
+    match source {
+        DependencySource::Git { url, .. } => {
+            let url = url.trim();
+            if url.is_empty() {
+                return;
+            }
+            let url = go_github_mirror(url).unwrap_or_else(|| url.to_string());
+            if url.starts_with("https://github.com") || url.starts_with("git@github.com") {
+                _ = github_sources.insert(url.replace("git@github.com", "https://github.com"));
+            } else {
+                _ = other_sources.insert(url);
+            }
+        }
+        DependencySource::Registry => {
+            if let Some(purl) = eco.purl(name) {
+                fetch_ecosystem.push((name.to_string(), purl));
+            }
+        }
+        // Path/Workspace/Sdk/Url deps and private (custom/alternate) registries are not
+        // resolvable against the public ecosyste.ms index.
+        _ => {}
+    }
+}
+
+/// PEP 621/735/Poetry section -> breadth: `NonOpt` keeps runtime deps; `All` adds optional
+/// groups; `BuildAndDev` adds everything (dependency groups, Poetry groups, build-system
+/// requires, requirements files).
+fn pypi_section_selected(section: &PypiDependencySection, breadth: &Breadth) -> bool {
+    use PypiDependencySection as S;
+    match breadth {
+        Breadth::NonOpt => matches!(section, S::Dependencies | S::PoetryDependencies),
+        Breadth::All => matches!(
+            section,
+            S::Dependencies | S::PoetryDependencies | S::OptionalDependencies { .. }
+        ),
+        Breadth::BuildAndDev => true,
+    }
+}
+
+/// `go.mod` -> breadth: `NonOpt` keeps direct (non-`// indirect`) requires; `All` also keeps
+/// indirect requires; `BuildAndDev` is the same as `All` (Go has no dev/build section).
+fn go_dep_selected(dep: &GoDependency, breadth: &Breadth) -> bool {
+    if dep.directive != GoDirective::Require {
+        return false;
+    }
+    match breadth {
+        Breadth::NonOpt => !dep.indirect,
+        Breadth::All | Breadth::BuildAndDev => true,
+    }
+}
+
+/// `Gemfile` group -> breadth: `NonOpt` keeps runtime (`:default`/`:production`); `All` also
+/// keeps custom groups; `BuildAndDev` also keeps `:development` and `:test`.
+fn bundler_dep_selected(dep: &BundlerDependency, breadth: &Breadth) -> bool {
+    use DependencyGroup as G;
+    match breadth {
+        Breadth::NonOpt => matches!(dep.group, G::Default | G::Production),
+        Breadth::All => !matches!(dep.group, G::Development | G::Test),
+        Breadth::BuildAndDev => true,
+    }
+}
+
+/// `composer.json` section -> breadth: only `require-dev` sits beyond the runtime `require`, so
+/// `NonOpt`/`All` keep `require` and `BuildAndDev` adds `require-dev`.
+fn composer_dep_selected(dep: &ComposerDependency, breadth: &Breadth) -> bool {
+    match breadth {
+        Breadth::NonOpt | Breadth::All => matches!(dep.section, ComposerSection::Require),
+        Breadth::BuildAndDev => true,
+    }
+}
+
+/// Maven scope -> breadth: `NonOpt` keeps compile/runtime/provided; `All` also keeps system;
+/// `BuildAndDev` also keeps `test`/`import`.
+fn maven_dep_selected(dep: &MavenDependency, breadth: &Breadth) -> bool {
+    use MavenScope as M;
+    match breadth {
+        Breadth::NonOpt => matches!(dep.scope, M::Compile | M::Runtime | M::Provided),
+        Breadth::All => matches!(dep.scope, M::Compile | M::Runtime | M::Provided | M::System),
+        Breadth::BuildAndDev => true,
+    }
+}
+
+/// Best-effort check for a GitLab host whose `/api/v4` JSON API we know how to query. Covers
+/// `gitlab.com` and self-hosted instances whose hostname mentions "gitlab"; any other forge
+/// (`cs.opensource.google`, `gitbox.apache.org`, ...) is skipped rather than mis-queried.
+fn is_gitlab_host(host: &str) -> bool {
+    host == "gitlab.com" || host.contains("gitlab")
+}
+
+/// Fetches a GitLab project and its contributors through the `/api/v4` JSON API.
+async fn fetch_gitlab_contributors(
+    base: &str,
+    owner: &str,
+    repo: &str,
+) -> anyhow::Result<(GitLabProject, Vec<GitLabContributor>)> {
+    println!("fetching {base} data for: {owner}/{repo}");
+    let url = format!("https://{base}/api/v4/projects/{owner}%2F{repo}");
+    let data = reqwest::get(&url).await?.json::<GitLabProject>().await?;
+    let url = format!("{url}/repository/contributors");
+    let contributors = reqwest::get(&url)
+        .await?
+        .json::<Vec<GitLabContributor>>()
+        .await?;
+    anyhow::Ok((data, contributors))
 }
 
 /// Normalises the few repository-URL shapes ecosyste.ms returns into the bare
-/// `https://...` form the downstream GitHub/GitLab routing expects.
+/// `https://...` form the downstream GitHub/GitLab routing expects, and rewrites the
+/// non-GitHub canonical hosts we know a GitHub mirror for (see [`go_github_mirror`]).
 fn normalize_repo_url(url: &str) -> String {
-    url.trim()
+    let url = url
+        .trim()
         .trim_start_matches("git+")
-        .replace("git@github.com:", "https://github.com/")
+        .replace("git@github.com:", "https://github.com/");
+    go_github_mirror(&url).unwrap_or(url)
+}
+
+/// Maps the canonical, non-GitHub hosting of a few well-known modules to their public GitHub
+/// mirror, so they can be routed like any other GitHub source instead of being skipped.
+///
+/// Go's `golang.org/x/*` modules are the motivating case: their canonical home is
+/// `cs.opensource.google` (or `go.googlesource.com`), but they are mirrored at
+/// `github.com/golang/*`, which is the only place this tool can read contributors from.
+/// Returns `None` when there is no known mirror, leaving the caller to skip the host.
+fn go_github_mirror(url: &str) -> Option<String> {
+    let rest = url.strip_prefix("https://")?;
+    let pkg = rest
+        .strip_prefix("cs.opensource.google/go/x/")
+        .or_else(|| rest.strip_prefix("go.googlesource.com/"))?;
+
+    let pkg = pkg.split('/').next()?;
+    if pkg.is_empty() {
+        return None;
+    }
+
+    Some(format!("https://github.com/golang/{pkg}"))
 }

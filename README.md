@@ -72,13 +72,16 @@ explicit path. Options passed on the command line always take precedence.
 ```toml
 paths = ["backend", "frontend"]
 sources = ["https://github.com/foo/bar"]
-format = "DepAndNames"
-breadth = "All"
+format = "dep-and-names"
+breadth = "all"
 mention = true
 contributions-threshold = 3
 output = "ACKNOWLEDGEMENTS.md"
 template = "my-template.md"
 ```
+
+Keys and enum values are kebab-case (e.g. `build-and-dev`, `name-and-count`); on the command
+line the same options use the variant names shown below (e.g. `-b BuildAndDev`).
 
 #### Github access token
 
