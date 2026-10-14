@@ -4,7 +4,10 @@ use std::{
 };
 
 use cargo_toml::{Dependency, Manifest};
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
+use deps_core::DependencySource;
+use deps_core::ParseResult as CoreParseResult;
+use deps_npm::{NpmDependency, NpmDependencySection};
 use handlebars::Handlebars;
 use octocrab::models::RateLimit;
 use serde::{Deserialize, Serialize};
@@ -14,6 +17,7 @@ use tokio::{
     time::{sleep, sleep_until, Duration, Instant},
 };
 use unfmt_macros::unformat;
+use url::Url;
 
 const USER_AGENT: &str = "acknowledgments.rs (acknowledgements_rs@proton.me)";
 const CRATES_IO_RATE_LIMIT: u64 = 1000;
@@ -22,17 +26,20 @@ const GITHUB_AT_GIT: &str = "git@github.com";
 const TEMPLATE: &str = include_str!("./template.md");
 const CACHE_NAME: &str = "acknowledgements_cache";
 const FILE_NAME: &str = "ACKNOWLEDGEMENTS.md";
+const RC_NAME: &str = ".acknowledgementsrc";
 
 /// acknowledge is a simple CLI tool
 /// to analyze dependencies of a Cargo (rust) project
-/// and produce an ACKNOWLEDMENTS.md file
+/// and produce an ACKNOWLEDGEMENTS.md file
 /// listing (major) contributors of your dependencies
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    /// Path to Cargo project for analysis
-    #[arg(short, long)]
-    path: PathBuf,
+    /// Path(s) to project root(s) for analysis: a Cargo or npm project. Repeatable, so
+    /// several projects can be merged into a single output file, and may also be set in a
+    /// `.acknowledgementsrc`.
+    #[arg(short, long, num_args = 1..)]
+    path: Vec<PathBuf>,
 
     /// Running Acknowledgements on any project of reasonable size you're likely to face rate limits. Please provide a personal access token.
     #[arg(short, long)]
@@ -78,7 +85,7 @@ enum Commands {
     ClearCache,
 }
 
-#[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::EnumString)]
+#[derive(Debug, Clone, Copy, Deserialize, strum_macros::Display, strum_macros::EnumString)]
 enum Format {
     /// Name of the contributor and count of contributions
     NameAndCount,
@@ -88,7 +95,7 @@ enum Format {
     NameAndDeps,
 }
 
-#[derive(Debug, Clone, Copy, strum_macros::Display, strum_macros::EnumString)]
+#[derive(Debug, Clone, Copy, Deserialize, strum_macros::Display, strum_macros::EnumString)]
 enum Breadth {
     /// Non-optional dependencies
     NonOpt,
@@ -96,6 +103,24 @@ enum Breadth {
     All,
     /// All dependencies including [build-dependencies] and [dev-dependencies]
     BuildAndDev,
+}
+
+/// Optional project configuration, loaded from a `.acknowledgementsrc` (TOML) file.
+///
+/// Values set on the command line always win; entries here only fill in what the command
+/// line left unspecified. Every field mirrors a CLI option of the same (kebab-case) name.
+#[derive(Debug, Default, Deserialize)]
+#[serde(rename_all = "kebab-case", deny_unknown_fields)]
+struct RcFile {
+    paths: Option<Vec<PathBuf>>,
+    sources: Option<Vec<String>>,
+    format: Option<Format>,
+    breadth: Option<Breadth>,
+    mention: Option<bool>,
+    contributions_threshold: Option<usize>,
+    output: Option<PathBuf>,
+    template: Option<PathBuf>,
+    gh_token: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -107,6 +132,12 @@ struct GitLabContributor {
 #[derive(Serialize, Deserialize)]
 struct GitLabProject {
     name: String,
+}
+
+/// Minimal shape of an ecosyste.ms package-lookup entry; only the repository field is used.
+#[derive(Deserialize)]
+struct EcosysteMsPackage {
+    repository_url: Option<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -143,12 +174,21 @@ async fn main() {
 }
 
 async fn run() -> anyhow::Result<()> {
-    let args = Args::parse();
+    let matches = Args::command().get_matches();
+    let mut args = Args::from_arg_matches(&matches)?;
 
-    if let Some(command) = args.command {
+    if let Some(command) = args.command.take() {
         match command {
             Commands::ClearCache => return clear_cache().await,
         }
+    }
+
+    apply_rc(&matches, &mut args)?;
+
+    if args.path.is_empty() {
+        anyhow::bail!(
+            "no project paths given; pass -p/--path or set `paths` in a .acknowledgementsrc"
+        );
     }
 
     let mut github_sources: HashSet<String> = args
@@ -172,65 +212,161 @@ async fn run() -> anyhow::Result<()> {
         .cloned()
         .collect();
 
-    let deps = manifest_deps(&args.path, &args.breadth)?;
+    let mut fetch_deps_data: HashSet<String> = HashSet::new();
+    let mut fetch_ecosystem: Vec<(String, String)> = Vec::new();
 
-    println!("Analyzing {} dependencies...", deps.len());
+    for path in &args.path {
+        match find_manifest(path) {
+            Some((Ecosystem::Npm, manifest)) => {
+                let deps = npm_deps(&manifest, &args.breadth)?;
+                println!(
+                    "Analyzing {} dependencies in {}...",
+                    deps.len(),
+                    path.display()
+                );
 
-    let mut fetch_deps_data = HashSet::new();
-
-    for (name, dep) in deps {
-        match dep {
-            Dependency::Detailed(detail) => {
-                if let Some(git) = detail.git {
-                    if git.starts_with("https://github.com") || git.starts_with("git@github.com") {
-                        _ = github_sources
-                            .insert(git.replace("git@github.com", "https://github.com"));
-                    } else {
-                        _ = other_sources.insert(git)
+                for dep in deps {
+                    match &dep.source {
+                        DependencySource::Git { url, .. } => {
+                            if url.starts_with("https://github.com")
+                                || url.starts_with("git@github.com")
+                            {
+                                _ = github_sources
+                                    .insert(url.replace("git@github.com", "https://github.com"));
+                            } else {
+                                _ = other_sources.insert(url.clone());
+                            }
+                        }
+                        DependencySource::Registry => {
+                            let name = dep.name.as_str().to_string();
+                            let purl = format!("pkg:npm/{name}");
+                            fetch_ecosystem.push((name, purl));
+                        }
+                        // Path/Workspace/Sdk/Url deps and private (custom/alternate)
+                        // registries are not resolvable against the public ecosyste.ms index.
+                        _ => {}
                     }
-                } else if detail.path.is_none() {
-                    fetch_deps_data.insert(name);
                 }
             }
-            _ => {
-                fetch_deps_data.insert(name);
+            Some((Ecosystem::Cargo, _)) | None => {
+                let deps = manifest_deps(path, &args.breadth)?;
+                println!(
+                    "Analyzing {} dependencies in {}...",
+                    deps.len(),
+                    path.display()
+                );
+
+                for (name, dep) in deps {
+                    match dep {
+                        Dependency::Detailed(detail) => {
+                            if let Some(git) = detail.git {
+                                if git.starts_with("https://github.com")
+                                    || git.starts_with("git@github.com")
+                                {
+                                    _ = github_sources.insert(
+                                        git.replace("git@github.com", "https://github.com"),
+                                    );
+                                } else {
+                                    _ = other_sources.insert(git)
+                                }
+                            } else if detail.path.is_none() {
+                                fetch_deps_data.insert(name);
+                            }
+                        }
+                        _ => {
+                            fetch_deps_data.insert(name);
+                        }
+                    }
+                }
+            }
+            Some((eco, manifest)) => {
+                let count = collect_and_ingest(
+                    &manifest,
+                    eco,
+                    &mut github_sources,
+                    &mut other_sources,
+                    &mut fetch_ecosystem,
+                )?;
+                println!("Analyzing {} dependencies in {}...", count, path.display());
             }
         }
     }
 
     let (repo_sx, mut repo_rx) = unbounded_channel();
 
-    let out = tokio::spawn(async move {
-        let crates_io_client = crates_io_api::AsyncClient::new(
-            USER_AGENT,
-            std::time::Duration::from_millis(CRATES_IO_RATE_LIMIT),
-        )?;
+    let out = tokio::spawn({
+        let repo_sx = repo_sx.clone();
+        async move {
+            let crates_io_client = crates_io_api::AsyncClient::new(
+                USER_AGENT,
+                std::time::Duration::from_millis(CRATES_IO_RATE_LIMIT),
+            )?;
 
-        for crate_name in fetch_deps_data {
-            let c_key = format!("crates-io, {crate_name}");
+            for crate_name in fetch_deps_data {
+                let c_key = format!("crates-io, {crate_name}");
 
-            if let Some(d) = read_cached(c_key.as_str()).await {
-                repo_sx.send(d)?;
-                println!("cached crates.io data for: {crate_name}");
+                if let Some(d) = read_cached(c_key.as_str()).await {
+                    repo_sx.send(d)?;
+                    println!("cached crates.io data for: {crate_name}");
+                } else {
+                    let start = Instant::now();
+                    println!("fetching crates.io data for: {crate_name}");
+
+                    let data = crates_io_client.get_crate(crate_name.as_str()).await?;
+
+                    if let Some(r) = data.crate_data.repository {
+                        write_cached(c_key.as_str(), r.clone()).await;
+                        repo_sx.send(r)?;
+                    }
+
+                    if Instant::now().duration_since(start).as_millis()
+                        < CRATES_IO_RATE_LIMIT as u128
+                    {
+                        sleep_until(
+                            start
+                                .checked_add(Duration::from_millis(CRATES_IO_RATE_LIMIT))
+                                .unwrap(),
+                        )
+                        .await;
+                    }
+                }
+            }
+
+            anyhow::Ok(())
+        }
+    });
+
+    let out_ecosystem = tokio::spawn(async move {
+        for (name, purl) in fetch_ecosystem {
+            let c_key = format!("ecosyste.ms, {purl}");
+
+            if let Some(r) = read_cached::<String>(c_key.as_str()).await {
+                println!("cached ecosyste.ms data for: {name}");
+                repo_sx.send(r)?;
+                continue;
+            }
+
+            println!("fetching ecosyste.ms data for: {name}");
+
+            let url = format!("https://packages.ecosyste.ms/api/v1/packages/lookup?purl={purl}");
+            let response = reqwest::get(&url).await?;
+
+            if !response.status().is_success() {
+                eprintln!(
+                    "ecosyste.ms lookup for {name} failed: {}",
+                    response.status()
+                );
+                continue;
+            }
+
+            let packages = response.json::<Vec<EcosysteMsPackage>>().await?;
+
+            if let Some(repo) = packages.into_iter().find_map(|p| p.repository_url) {
+                let repo = normalize_repo_url(&repo);
+                write_cached(c_key.as_str(), repo.clone()).await;
+                repo_sx.send(repo)?;
             } else {
-                let start = Instant::now();
-                println!("fetching crates.io data for: {crate_name}");
-
-                let data = crates_io_client.get_crate(crate_name.as_str()).await?;
-
-                if let Some(r) = data.crate_data.repository {
-                    write_cached(c_key.as_str(), r.clone()).await;
-                    repo_sx.send(r)?;
-                }
-
-                if Instant::now().duration_since(start).as_millis() < CRATES_IO_RATE_LIMIT as u128 {
-                    sleep_until(
-                        start
-                            .checked_add(Duration::from_millis(CRATES_IO_RATE_LIMIT))
-                            .unwrap(),
-                    )
-                    .await;
-                }
+                eprintln!("no repository found for: {name}");
             }
         }
 
@@ -246,6 +382,7 @@ async fn run() -> anyhow::Result<()> {
     }
 
     _ = out.await??;
+    _ = out_ecosystem.await??;
 
     let (contrib_sx, mut contrib_rx) = unbounded_channel();
 
@@ -585,7 +722,11 @@ async fn run() -> anyhow::Result<()> {
     let generated = handlebars.render("template", &data)?;
 
     let output_file_path = args.output.unwrap_or_else(|| {
-        let mut path = args.path.clone();
+        let mut path = args
+            .path
+            .first()
+            .cloned()
+            .unwrap_or_else(|| PathBuf::from("."));
         path.push(FILE_NAME);
         path
     });
@@ -758,4 +899,289 @@ fn manifest_deps(path: &PathBuf, depth: &Breadth) -> anyhow::Result<Vec<(String,
     }
 
     Ok(deps)
+}
+
+/// Locates the nearest `.acknowledgementsrc`: the `ACKNOWLEDGEMENTS_RC` environment variable
+/// wins, then the current directory and its ancestors, then the home directory.
+fn find_rc_file() -> Option<PathBuf> {
+    if let Ok(explicit) = std::env::var("ACKNOWLEDGEMENTS_RC") {
+        let explicit = PathBuf::from(explicit);
+        if explicit.is_file() {
+            return Some(explicit);
+        }
+    }
+
+    if let Ok(cwd) = std::env::current_dir() {
+        for dir in cwd.ancestors() {
+            let candidate = dir.join(RC_NAME);
+            if candidate.is_file() {
+                return Some(candidate);
+            }
+        }
+    }
+
+    dirs::home_dir()
+        .map(|home| home.join(RC_NAME))
+        .filter(|candidate| candidate.is_file())
+}
+
+fn load_rc() -> anyhow::Result<Option<RcFile>> {
+    let Some(path) = find_rc_file() else {
+        return Ok(None);
+    };
+
+    let content = std::fs::read_to_string(&path)?;
+    let rc = toml::from_str::<RcFile>(&content)
+        .map_err(|e| anyhow::anyhow!("failed to parse {}: {e}", path.display()))?;
+
+    Ok(Some(rc))
+}
+
+/// Fills `args` from a `.acknowledgementsrc`, only for options the user did not pass on the
+/// command line. clap's value source is consulted so that clap's own defaults don't mask the
+/// config file.
+fn apply_rc(matches: &clap::ArgMatches, args: &mut Args) -> anyhow::Result<()> {
+    let Some(rc) = load_rc()? else {
+        return Ok(());
+    };
+
+    let from_cli =
+        |id: &str| matches.value_source(id) == Some(clap::parser::ValueSource::CommandLine);
+
+    if !from_cli("path") {
+        if let Some(v) = rc.paths {
+            args.path = v;
+        }
+    }
+    if !from_cli("sources") {
+        if let Some(v) = rc.sources {
+            args.sources = v;
+        }
+    }
+    if !from_cli("format") {
+        if let Some(v) = rc.format {
+            args.format = v;
+        }
+    }
+    if !from_cli("breadth") {
+        if let Some(v) = rc.breadth {
+            args.breadth = v;
+        }
+    }
+    if !from_cli("mention") {
+        if let Some(v) = rc.mention {
+            args.mention = v;
+        }
+    }
+    if !from_cli("contributions_threshold") {
+        if let Some(v) = rc.contributions_threshold {
+            args.contributions_threshold = v;
+        }
+    }
+    if !from_cli("output") {
+        if let Some(v) = rc.output {
+            args.output = Some(v);
+        }
+    }
+    if !from_cli("template") {
+        if let Some(v) = rc.template {
+            args.template = Some(v);
+        }
+    }
+    if !from_cli("gh_token") {
+        if let Some(v) = rc.gh_token {
+            args.gh_token = Some(v);
+        }
+    }
+
+    Ok(())
+}
+
+/// The package ecosystem a project's manifest belongs to.
+#[derive(Debug, Clone, Copy)]
+enum Ecosystem {
+    Cargo,
+    Npm,
+    Pypi,
+    Go,
+    Bundler,
+    Composer,
+    Maven,
+    NuGet,
+}
+
+impl Ecosystem {
+    /// ecosyste.ms package-url for a public-registry dependency, or `None` for Cargo (which
+    /// resolves through crates.io instead of ecosyste.ms).
+    fn purl(self, name: &str) -> Option<String> {
+        match self {
+            Ecosystem::Cargo => None,
+            Ecosystem::Npm => Some(format!("pkg:npm/{name}")),
+            Ecosystem::Pypi => Some(format!("pkg:pypi/{name}")),
+            Ecosystem::Go => Some(format!("pkg:golang/{name}")),
+            Ecosystem::Bundler => Some(format!("pkg:gem/{name}")),
+            Ecosystem::Composer => Some(format!("pkg:composer/{name}")),
+            Ecosystem::NuGet => Some(format!("pkg:nuget/{name}")),
+            // Maven's canonical name is "{groupId}:{artifactId}".
+            Ecosystem::Maven => name
+                .split_once(':')
+                .map(|(group, artifact)| format!("pkg:maven/{group}/{artifact}")),
+        }
+    }
+}
+
+/// Manifest file names recognised in a project directory, in detection priority order.
+const MANIFEST_NAMES: &[&str] = &[
+    "Cargo.toml",
+    "package.json",
+    "pyproject.toml",
+    "go.mod",
+    "Gemfile",
+    "composer.json",
+    "pom.xml",
+    "packages.config",
+    "Directory.Packages.props",
+];
+
+/// Maps a manifest file name to its ecosystem, including the extension-based `.csproj`
+/// (NuGet) and `.gemspec` (Bundler) forms.
+fn manifest_ecosystem(file_name: &str) -> Option<Ecosystem> {
+    match file_name {
+        "Cargo.toml" => Some(Ecosystem::Cargo),
+        "package.json" => Some(Ecosystem::Npm),
+        "pyproject.toml" => Some(Ecosystem::Pypi),
+        "go.mod" => Some(Ecosystem::Go),
+        "Gemfile" => Some(Ecosystem::Bundler),
+        "composer.json" => Some(Ecosystem::Composer),
+        "pom.xml" => Some(Ecosystem::Maven),
+        "packages.config" | "Directory.Packages.props" => Some(Ecosystem::NuGet),
+        _ if file_name.ends_with(".csproj") => Some(Ecosystem::NuGet),
+        _ if file_name.ends_with(".gemspec") => Some(Ecosystem::Bundler),
+        _ => None,
+    }
+}
+
+/// Locates the manifest to analyse at `path`, which may be either a manifest file or a
+/// project directory. Cargo is prioritised so a `Cargo.toml` project keeps behaving exactly
+/// as it did before other ecosystems were recognised.
+fn find_manifest(path: &PathBuf) -> Option<(Ecosystem, PathBuf)> {
+    if path.is_file() {
+        return path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .and_then(manifest_ecosystem)
+            .map(|eco| (eco, path.clone()));
+    }
+
+    for name in MANIFEST_NAMES {
+        let candidate = path.join(name);
+        if candidate.is_file() {
+            if let Some(eco) = manifest_ecosystem(name) {
+                return Some((eco, candidate));
+            }
+        }
+    }
+
+    if let Ok(entries) = std::fs::read_dir(path) {
+        for entry in entries.flatten() {
+            if let Some(name) = entry.file_name().to_str() {
+                if let Some(eco) = manifest_ecosystem(name) {
+                    return Some((eco, entry.path()));
+                }
+            }
+        }
+    }
+
+    None
+}
+
+/// Parses a `package.json` with the `deps-npm` (deps-lsp) parser and keeps the dependency
+/// sections selected by `breadth`.
+fn npm_deps(manifest: &PathBuf, breadth: &Breadth) -> anyhow::Result<Vec<NpmDependency>> {
+    let manifest = std::fs::canonicalize(manifest)?;
+    let content = std::fs::read_to_string(&manifest)?;
+    let uri = Url::from_file_path(&manifest)
+        .map_err(|_| anyhow::anyhow!("invalid manifest path: {}", manifest.display()))?;
+
+    let parsed = deps_npm::parse_package_json(&content, &uri)?;
+
+    let sections: &[NpmDependencySection] = match breadth {
+        Breadth::NonOpt => &[NpmDependencySection::Dependencies],
+        Breadth::All => &[
+            NpmDependencySection::Dependencies,
+            NpmDependencySection::OptionalDependencies,
+        ],
+        Breadth::BuildAndDev => &[
+            NpmDependencySection::Dependencies,
+            NpmDependencySection::DevDependencies,
+            NpmDependencySection::OptionalDependencies,
+            NpmDependencySection::PeerDependencies,
+        ],
+    };
+
+    Ok(parsed
+        .dependencies
+        .into_iter()
+        .filter(|dep| sections.contains(&dep.section))
+        .collect())
+}
+
+/// Parses a manifest with the ecosystem's `deps-*` parser, then classifies each dependency
+/// through the shared `deps_core` traits — so every ecosystem beyond Cargo/npm needs no
+/// per-crate type handling here. Returns the number of dependencies seen.
+fn collect_and_ingest(
+    manifest: &PathBuf,
+    eco: Ecosystem,
+    github_sources: &mut HashSet<String>,
+    other_sources: &mut HashSet<String>,
+    fetch_ecosystem: &mut Vec<(String, String)>,
+) -> anyhow::Result<usize> {
+    let manifest = std::fs::canonicalize(manifest)?;
+    let content = std::fs::read_to_string(&manifest)?;
+    let uri = Url::from_file_path(&manifest)
+        .map_err(|_| anyhow::anyhow!("invalid manifest path: {}", manifest.display()))?;
+
+    let result: Box<dyn CoreParseResult> = match eco {
+        Ecosystem::Pypi => Box::new(deps_pypi::PypiParser::new().parse_content(&content, &uri)?),
+        Ecosystem::Go => Box::new(deps_go::parse_go_mod(&content, &uri)?),
+        Ecosystem::Bundler => Box::new(deps_bundler::parse_gemfile(&content, &uri)?),
+        Ecosystem::Composer => Box::new(deps_composer::parse_composer_json(&content, &uri)?),
+        Ecosystem::Maven => Box::new(deps_maven::parse_pom_xml(&content, &uri)?),
+        Ecosystem::NuGet => Box::new(deps_nuget::parse_project_file(&content, &uri)?),
+        Ecosystem::Cargo | Ecosystem::Npm => unreachable!("handled by their own branches"),
+    };
+
+    let dependencies = result.dependencies();
+    let count = dependencies.len();
+
+    for dep in dependencies {
+        let name = dep.name().as_str().to_string();
+        match dep.source() {
+            DependencySource::Git { url, .. } => {
+                if url.starts_with("https://github.com") || url.starts_with("git@github.com") {
+                    _ = github_sources.insert(url.replace("git@github.com", "https://github.com"));
+                } else {
+                    _ = other_sources.insert(url);
+                }
+            }
+            DependencySource::Registry => {
+                if let Some(purl) = eco.purl(&name) {
+                    fetch_ecosystem.push((name, purl));
+                }
+            }
+            // Path/Workspace/Sdk/Url deps and private (custom/alternate) registries are not
+            // resolvable against the public ecosyste.ms index.
+            _ => {}
+        }
+    }
+
+    Ok(count)
+}
+
+/// Normalises the few repository-URL shapes ecosyste.ms returns into the bare
+/// `https://...` form the downstream GitHub/GitLab routing expects.
+fn normalize_repo_url(url: &str) -> String {
+    url.trim()
+        .trim_start_matches("git+")
+        .replace("git@github.com:", "https://github.com/")
 }

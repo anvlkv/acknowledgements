@@ -13,17 +13,19 @@ cargo install acknowledgements-rs
 ## Usage
 
 ```
-acknowledge is a simple CLI tool to analyze dependencies of a Cargo (rust) project and produce an ACKNOWLEDMENTS.md file listing (major) contributors of your dependencies
+acknowledge is a simple CLI tool to analyze dependencies of a Cargo (rust) project and produce an ACKNOWLEDGEMENTS.md file listing (major) contributors of your dependencies
 
-Usage: acknowledge [OPTIONS] --path <PATH> [COMMAND]
+Usage: acknowledge [OPTIONS] [COMMAND]
 
 Commands:
   clear-cache  Clears cache
   help         Print this message or the help of the given subcommand(s)
 
 Options:
-  -p, --path <PATH>
-          Path to Cargo project for analysis
+  -p, --path <PATH>...
+          Path(s) to project root(s) for analysis: a Cargo or npm project. Repeatable,
+          so several projects can be merged into a single output file, and may also be
+          set in a `.acknowledgementsrc`
   -g, --gh-token <GH_TOKEN>
           Running Acknowledgements on any project of reasonable size you're likely to face rate limits. Please provide a personal access token
   -o, --output <OUTPUT>
@@ -47,6 +49,36 @@ Options:
 ```
 
 ### Options
+
+#### Paths
+
+`-p/--path` can be given more than once (or with several space-separated values), so several
+projects are merged into a single acknowledgements file:
+
+```
+acknowledge -p ./backend -p ./frontend
+```
+
+Each path is analysed independently; the ecosystem (Cargo or npm) is detected from the
+manifest present in it. The default output is written next to the first path.
+
+#### Config file
+
+Instead of passing every option on the command line, put defaults in a `.acknowledgementsrc`
+(TOML) file. It is looked up in the current directory and its ancestors, then in your home
+directory; the `ACKNOWLEDGEMENTS_RC` environment variable overrides that search with an
+explicit path. Options passed on the command line always take precedence.
+
+```toml
+paths = ["backend", "frontend"]
+sources = ["https://github.com/foo/bar"]
+format = "DepAndNames"
+breadth = "All"
+mention = true
+contributions-threshold = 3
+output = "ACKNOWLEDGEMENTS.md"
+template = "my-template.md"
+```
 
 #### Github access token
 

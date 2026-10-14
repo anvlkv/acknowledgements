@@ -22,4 +22,4 @@ And {{others}} other cool humans for their contributions, who haven't made it to
 
 ---
 
-This file was generated using [`acknowldge` CLI](https://crates.io/crates/acknowledgements-rs). Thank you for acknowledging the contributors!
+This file was generated using [`acknowledge` CLI](https://crates.io/crates/acknowledgements-rs). Thank you for acknowledging the contributors!
